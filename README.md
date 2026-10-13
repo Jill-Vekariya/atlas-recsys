@@ -16,6 +16,10 @@ or business uplift.
 Read [measured results](docs/RESULTS.md), [the interview guide](docs/INTERVIEW_GUIDE.md),
 [deployment instructions](docs/DEPLOYMENT.md), and [ownership exercises](docs/OWNERSHIP.md).
 
+[Open the public demonstration](https://cotton-gender-pts-metric.trycloudflare.com).
+This free HTTPS link shares the Docker app from the configured PC. It is temporary and needs
+the PC and Docker running; see [the no-card operating guide](docs/FREE_DEMO.md).
+
 The included numeric reports cover **real Amazon Reviews 2023 and MovieLens data**, plus a
 separately labeled synthetic fixture. The release includes a small synthetic demo bundle.
 Raw research datasets and real-data model bundles are not redistributed in the release.
@@ -71,16 +75,17 @@ Open http://127.0.0.1:10000. [Render deployment](docs/RENDER_DEPLOYMENT.md) uses
 an automatically generated API key, and CI-gated updates. Local Compose uses the separate
 `training` target and persistent volumes. A Render free service's feedback is temporary.
 
-**Verification status:** 24 tests, lint/format checks, real-data experiments, and local HTTP/UI
+**Verification status:** Python tests, lint/format checks, real-data experiments, and local HTTP/UI
 checks pass. The cloud Docker image also built and ran on Docker Desktop; authentication,
 recommendations, feedback retries, metrics, and WebSocket checks passed. Feedback survived
 container replacement using a dedicated volume. See [the verification record](docs/VERIFICATION.md).
 
 [GitHub's Python and Docker checks passed](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465119077).
 The configured PC demo runs at http://localhost:10080; this address is local to that PC.
-Public Render hosting is pending: the authenticated creation request returned HTTP 402,
-requiring account payment information despite the requested free plan. No hosted service was
-created. See [the recorded attempt](reports/render/deployment_attempt.json).
+The public Docker demonstration is verified through Cloudflare Quick Tunnel, including
+readiness, frontend HTML, documentation, authentication rejection, and WebSockets. Public checks
+transmit no API key; authenticated functional checks passed locally. Its temporary address is
+recorded in [the public check report](reports/public_demo/deployment.json).
 
 [Published Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys):
 
@@ -92,7 +97,8 @@ docker run --rm -p 127.0.0.1:10000:10000 -e ATLAS_EPHEMERAL=true ghcr.io/jill-ve
 Anonymous registry access and the published digest were verified. For a reproducible deployment,
 pin the digest in [the image manifest](reports/deployment/image-manifest.json).
 
-[Create the Render demo from this repository](https://render.com/deploy?repo=https://github.com/Jill-Vekariya/atlas-recsys).
+[No-card public demonstration guide](docs/FREE_DEMO.md). Render creation was blocked by an
+account payment-information requirement, and that provider was not used.
 
 ## Data and experiments
 

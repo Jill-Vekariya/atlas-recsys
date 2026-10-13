@@ -1,0 +1,22 @@
+{
+    "checked_at_utc":  "2026-10-13T21:09:39.762563+00:00",
+    "base_url":  "https://cotton-gender-pts-metric.trycloudflare.com",
+    "passed":  true,
+    "synthetic":  true,
+    "model_version":  "synthetic-v1",
+    "checks":  [
+                   "Public API readiness",
+                   "Public Streamlit readiness and frontend HTML",
+                   "Public Swagger and OpenAPI routing",
+                   "Public unauthenticated API rejection",
+                   "Public Streamlit WebSocket upgrade"
+               ],
+    "scope":  "Public checks without credentials; authenticated model/feedback checks run locally",
+    "limitations":  "No public load test or real-user quality experiment",
+    "hosting":  "Docker Desktop on the configured PC through Cloudflare Quick Tunnel",
+    "provider_account_required":  false,
+    "payment_card_required":  false,
+    "link_lifetime":  "Temporary; hostname changes if tunnel restarts",
+    "availability":  "PC, Docker Desktop, application, and tunnel must stay running",
+    "cloudflared_version":  "2026.10.0"
+}

@@ -2,6 +2,9 @@
 
 ## Current status
 
+The active no-card public demonstration uses Cloudflare Quick Tunnel from the configured PC.
+See [FREE_DEMO.md](FREE_DEMO.md). Render is not the active hosting provider.
+
 The source is public at https://github.com/Jill-Vekariya/atlas-recsys. Docker build and application
 checks pass on the configured PC and in GitHub Actions. The PC demo runs at http://localhost:10080
 with persistent feedback. Render CLI authorization succeeded, but service creation returned
@@ -41,8 +44,8 @@ authorized in the browser. The CLI was installed in the configured PC's project 
 the browser authorization succeeded. Its commands use the CLI's stored session, not a token
 copied into project files. The Blueprint remains the repeatable configuration for future setup.
 
-The recorded account gate must be resolved in Render's dashboard before retrying automated
-creation. Choose the free web-service plan when reviewing the deployment configuration.
+The owner requires no card entry or hosting payment. The recorded Render account gate therefore
+excludes this provider from the active setup; the Blueprint documents an optional hosting path.
 
 The free configuration does not attach a persistent disk. Imported research data are not
 downloaded on startup; the hosted catalog and example users are synthetic. Render terminates

@@ -28,5 +28,5 @@ The verifier labels its feedback as demo traffic. It checks API/UI readiness, AP
 new-user fallback, feedback retries, metrics, Swagger routing, and the dashboard WebSocket.
 It does not measure recommendation quality or cloud load capacity.
 
-Public access requires the Render deployment described in RENDER_DEPLOYMENT.md. A hosted free
-service uses temporary feedback storage and a separate API key generated for that service.
+Public sharing is configured through Cloudflare Quick Tunnel; see FREE_DEMO.md. The public URL
+depends on this PC and Docker staying online. Feedback persists in the local dedicated volume.
