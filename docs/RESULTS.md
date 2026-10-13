@@ -126,4 +126,4 @@ Rollback triggered: **True**. Post-rollback route: **primary**, bundle **synthet
 
 ## Verification boundaries
 
-Python dependency installation, unit/integration checks, real HTTP requests, and Streamlit application flows were exercised. Docker, GitHub Actions, GHCR publication, and public hosting were not run in this environment. No online business A/B test, multi-node scaling test, or internship outcome is established.
+These experiments measure recommendation quality and local workload behavior. Deployment evidence is recorded separately in VERIFICATION.md and FREE_DEMO.md, including Docker, GitHub Actions, GHCR publication, and the temporary public demonstration. No online business A/B test, multi-node scaling test, or internship outcome is established.

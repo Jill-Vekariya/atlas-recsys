@@ -6,7 +6,7 @@ recorded on 13 October 2026; Docker used CPython 3.12.15 in Linux containers.
 | Check | Status | Evidence |
 |---|---|---|
 | Clean dependency installation | Passed | `uv sync --frozen --extra dev` completed |
-| Unit/integration tests | Passed | 24 tests; temporal history, cold withholding, loss, export parity, API, feedback, concurrency, routing, serving-import isolation |
+| Unit/integration tests | Passed | 25 tests; temporal history, cold withholding, loss, export parity, API, feedback, concurrency, routing, serving-import isolation, public-check credential isolation; [CI evidence](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38468949550) |
 | Ruff lint and formatting | Passed | Source, scripts, and tests checked |
 | Synthetic end-to-end training | Passed | `reports/synthetic/*.json` |
 | Amazon data preparation/training/evaluation | Passed | `reports/amazon/*.json` |

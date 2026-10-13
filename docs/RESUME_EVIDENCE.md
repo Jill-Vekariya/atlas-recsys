@@ -3,7 +3,7 @@
 | Evidence | Status | Location |
 |---|---|---|
 | Source implementation | Complete | Repository source and scripts |
-| Python verification | Passed locally | 24 tests plus lint/format checks |
+| Python verification | Passed in GitHub Actions | 25 tests plus lint/format checks; final source run `38468949550` |
 | Real-data evaluation | Recorded | Amazon and MovieLens JSON reports |
 | Local HTTP benchmark | Recorded | `reports/movielens/http_load.json` |
 | Cloud entrypoint application check | Passed locally | `reports/synthetic/cloud_startup.json` |

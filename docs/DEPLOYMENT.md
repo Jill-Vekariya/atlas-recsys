@@ -2,11 +2,12 @@
 
 ## What has and has not run
 
-The Python dependency lock was installed in a clean environment. Models, tests, a real HTTP
-server/client benchmark, and UI flows were exercised. No Docker daemon, GitHub account, VM,
-domain, or authenticated container host is available in the execution environment. Docker
-startup, GitHub CI, GHCR publication, and public TLS hosting are therefore unrun external steps.
-Their configuration is supplied so that each can be executed and reviewed independently.
+The Python environment, model experiments, HTTP benchmark, and UI flows were exercised. Docker
+build/start and authenticated application checks passed on the configured PC. GitHub Actions
+passed Python and Docker checks, and GHCR publication was verified with anonymous image access.
+The full application is publicly shared from that PC over a free Cloudflare Quick Tunnel.
+See [FREE_DEMO.md](FREE_DEMO.md) for the active no-card setup, its temporary URL, and operating
+limits. Managed Render creation was blocked by its account requirement and was not used.
 
 ## Local Docker
 
@@ -28,7 +29,8 @@ transitive Python versions are recorded in `uv.lock`. Base container tags are no
 
 ## Publish to your GitHub account
 
-Install GitHub CLI, authenticate it, and configure your actual Git author identity.
+The current repository is already public at https://github.com/Jill-Vekariya/atlas-recsys.
+For a new fork, install GitHub CLI, authenticate it, and configure your actual Git author identity.
 
 ```bash
 gh auth login
@@ -42,8 +44,8 @@ It stops when an origin already exists rather than pushing to an unknown remote.
 staged files before publishing if you have added your own data or credentials.
 
 The Python CI job checks formatting, meaningful tests, and the synthetic pipeline. The Docker
-job checks Compose initialization and API/demo readiness. Neither workflow is claimed as
-passed until it has run in your repository.
+job checks Compose initialization and API/demo readiness. The current repository passed
+[these checks](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38468949550).
 
 Publish a container through the `container-image` workflow after CI passes:
 
