@@ -2,15 +2,19 @@
 
 ## Current status
 
-The cloud configuration and entrypoint are prepared. Local-process checks pass for the reverse
-proxy, API, Streamlit, authentication, feedback retries, WebSocket upgrades, health command, and
-graceful shutdown. Docker execution, GitHub publication, GHCR publication, and the public Render
-service have not run because the required account connections are absent.
+The source is public at https://github.com/Jill-Vekariya/atlas-recsys. Docker build and application
+checks pass on the configured PC and in GitHub Actions. The PC demo runs at http://localhost:10080
+with persistent feedback. Render CLI authorization succeeded, but service creation returned
+HTTP 402 requiring payment information for this account, even with `--plan free`. Both the
+immutable-image path and Git-backed Docker path returned this response. No public service was
+created and no hosted URL is claimed. See `reports/render/deployment_attempt.json`.
+The cloud image is published at `ghcr.io/jill-vekariya/atlas-recsys:latest`; anonymous registry
+access passed, and its immutable digest is in `reports/deployment/image-manifest.json`.
 
 ## Repository and CI
 
-Publish the source to your GitHub account using the existing publishing script, or connect
-GitHub so the repository can be created and pushed on your behalf. Generated datasets,
+For a new fork, publish the source to your GitHub account using the existing publishing script.
+The original repository is already published. Generated datasets,
 credentials, and real-data bundles are excluded. The synthetic model is built during the image
 build rather than committed as training data.
 
@@ -20,8 +24,9 @@ builds the cloud image, checks API/UI readiness, and only then publishes it to G
 
 ## Create the public demonstration
 
-Connect Render and grant it access to the GitHub repository. Create a Blueprint from that
-repository with its root `render.yaml` file. The specification selects:
+Open [Deploy to Render](https://render.com/deploy?repo=https://github.com/Jill-Vekariya/atlas-recsys),
+sign in, and grant Render access to the GitHub repository. Create a Blueprint from that repository
+with its root `render.yaml` file. The specification selects:
 
 - Docker runtime using the default `cloud` target.
 - A free web-service plan in Singapore.
@@ -30,6 +35,14 @@ repository with its root `render.yaml` file. The specification selects:
 - A generated `ATLAS_API_KEY` shared by the internal API and Streamlit process.
 - Automatic updates after linked-branch CI checks pass.
 - An explicit temporary-feedback notice in the UI.
+
+The official Render CLI can also create the same Docker service after `render login` is
+authorized in the browser. The CLI was installed in the configured PC's project transfer folder;
+the browser authorization succeeded. Its commands use the CLI's stored session, not a token
+copied into project files. The Blueprint remains the repeatable configuration for future setup.
+
+The recorded account gate must be resolved in Render's dashboard before retrying automated
+creation. Choose the free web-service plan when reviewing the deployment configuration.
 
 The free configuration does not attach a persistent disk. Imported research data are not
 downloaded on startup; the hosted catalog and example users are synthetic. Render terminates
@@ -47,6 +60,7 @@ Use the actual returned URL:
 export ATLAS_PUBLIC_URL="https://YOUR-ACTUAL-SERVICE.onrender.com"
 curl --fail "$ATLAS_PUBLIC_URL/api/ready"
 curl --fail "$ATLAS_PUBLIC_URL/_stcore/health"
+ATLAS_API_KEY="$YOUR_RENDER_API_KEY" uv run python scripts/verify_deployment.py --url "$ATLAS_PUBLIC_URL" --output reports/render/deployment.json
 ```
 
 Visit the root page and verify a new-user preference flow and feedback submission. The API
@@ -68,8 +82,8 @@ After remote checks actually succeed, retain:
 5. The recorded local benchmark and its workload description.
 6. One failure analysis and one experiment you personally reproduced.
 
-Until those external steps succeed, describe the project as implemented and locally verified,
-with deployment configuration prepared. After successful hosting, a factual deployment bullet
+The repository is published and the application is verified in Docker. Public hosting is still
+pending. After successful hosting, a factual deployment bullet
 can say:
 
 “Containerized and deployed a recommendation demo with FastAPI, FAISS, and LightGBM; added

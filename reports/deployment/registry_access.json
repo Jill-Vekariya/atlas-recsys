@@ -1,0 +1,9 @@
+{
+    "checked_at_utc":  "2026-10-13T20:53:00.2613997Z",
+    "registry":  "ghcr.io/jill-vekariya/atlas-recsys",
+    "tag":  "latest",
+    "anonymous_manifest_status":  200,
+    "digest":  "sha256:14bac4ab939c08dec791c7fa3d2201405714f961b8cdf554facdc8f1f1ef8209",
+    "passed":  true,
+    "workflow_url":  "https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465120714"
+}

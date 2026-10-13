@@ -1,6 +1,7 @@
 # Verification record
 
-Recorded on 14 October 2026 using Python 3.12.14 on a CPU host.
+Python experiments used Python 3.12.14 on a CPU host. Remote Docker and GitHub checks were
+recorded on 13 October 2026; Docker used CPython 3.12.15 in Linux containers.
 
 | Check | Status | Evidence |
 |---|---|---|
@@ -16,11 +17,14 @@ Recorded on 14 October 2026 using Python 3.12.14 on a CPU host.
 | Canary failure detection and rollback | Passed locally | `reports/synthetic/canary.json` |
 | YAML parsing and shell syntax | Passed | Compose/workflow/prometheus YAML parsed; publishing shell syntax checked |
 | Cloud entrypoint/reverse proxy | Passed as local processes | `reports/synthetic/cloud_startup.json`; API/UI, auth, feedback, WebSocket, health, graceful shutdown |
-| Docker build/start | Not run | Docker daemon unavailable; GH CI contains startup checks |
-| GitHub publication and Actions | Not run | GitHub plugin found but not connected |
-| GHCR publication | Not run | Workflow prepared; no authenticated publish |
+| Docker build/start | Passed | Docker Desktop 29.8.2; cloud image healthy; `reports/synthetic/docker_startup.json` |
+| Docker API/UI/auth/feedback/WebSocket smoke checks | Passed | `scripts/verify_deployment.py` and Docker startup report |
+| Feedback persistence across container replacement | Passed | Dedicated named volume; recorded in Docker startup report |
+| GitHub publication and Actions | Passed | [Public repository](https://github.com/Jill-Vekariya/atlas-recsys); [Python and Docker checks](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465119077) |
+| GHCR publication | Passed | [Release workflow](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465120714); digest in `reports/deployment/image-manifest.json` |
+| Anonymous published-image access | Passed | Registry manifest returned HTTP 200 with the expected digest; `reports/deployment/registry_access.json` |
 | Public VM/domain/TLS hosting | Not run | Deployment files prepared; no hosting target supplied |
-| Render public deployment | Not run | Blueprint supplied; Render and GitHub accounts unconnected |
+| Render public deployment | Blocked by account requirement | CLI authorization succeeded; both image-backed and Git-backed free-plan creation returned HTTP 402 requiring payment information. No service created; `reports/render/deployment_attempt.json` |
 | Real-user A/B quality lift | Not measured | No real experiment participants or business outcome data |
 
 The current Starlette version emits a TestClient/httpx deprecation warning. Tests pass, and

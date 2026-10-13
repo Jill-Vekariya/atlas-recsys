@@ -1,18 +1,23 @@
 {
-  "checked_at_utc": "2026-10-13T20:41:02.639288+00:00",
-  "base_url": "http://127.0.0.1:10000",
-  "passed": true,
-  "synthetic": true,
-  "model_version": "synthetic-v1",
-  "checks": [
-    "API readiness",
-    "Streamlit readiness and frontend HTML",
-    "Swagger and OpenAPI routing",
-    "Unauthenticated API rejection",
-    "New-user recommendations and fallback",
-    "Demo feedback and retry idempotency",
-    "Authenticated monitoring",
-    "Streamlit WebSocket upgrade"
-  ],
-  "limitations": "Application smoke checks, not a load test or real-user quality experiment"
+    "checked_at_utc":  "2026-10-13T20:46:30.492616+00:00",
+    "base_url":  "http://127.0.0.1:10000",
+    "passed":  true,
+    "synthetic":  true,
+    "model_version":  "synthetic-v1",
+    "checks":  [
+                   "API readiness",
+                   "Streamlit readiness and frontend HTML",
+                   "Swagger and OpenAPI routing",
+                   "Unauthenticated API rejection",
+                   "New-user recommendations and fallback",
+                   "Demo feedback and retry idempotency",
+                   "Authenticated monitoring",
+                   "Streamlit WebSocket upgrade"
+               ],
+    "limitations":  "Application smoke checks, not a load test or real-user quality experiment",
+    "host_url":  "http://localhost:10080",
+    "environment":  "Docker Desktop 29.8.2, Linux amd64 containers on Windows",
+    "source_commit":  "14c617fcff20368abe18b60374de8a0c152dbef0",
+    "image_id":  "sha256:d997e115b7cdff307f047b56f5a50c2e18ae76a8a6a1d81da944b559b665043e",
+    "feedback_survived_container_replacement":  true
 }

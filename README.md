@@ -1,5 +1,7 @@
 # Atlas — Cold-Start Recommendation Under a Strict Latency Budget
 
+[![checks](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml/badge.svg)](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml)
+
 Atlas is an end-to-end recommendation engineering project: PyTorch retrieval, FAISS indexing,
 LightGBM ranking, full-catalog temporal evaluation, FastAPI serving, a Streamlit lab, feedback
 logging, and verified model rollout/rollback.
@@ -69,14 +71,28 @@ Open http://127.0.0.1:10000. [Render deployment](docs/RENDER_DEPLOYMENT.md) uses
 an automatically generated API key, and CI-gated updates. Local Compose uses the separate
 `training` target and persistent volumes. A Render free service's feedback is temporary.
 
-**Verification status:** Python installation, models, tests, real HTTP serving, and UI flows have
-been exercised here. Docker/Compose files and GitHub workflows are supplied; this environment
-has no Docker daemon or connected GitHub account, so container execution and remote publishing
-are not claimed as completed.
+**Verification status:** 24 tests, lint/format checks, real-data experiments, and local HTTP/UI
+checks pass. The cloud Docker image also built and ran on Docker Desktop; authentication,
+recommendations, feedback retries, metrics, and WebSocket checks passed. Feedback survived
+container replacement using a dedicated volume. See [the verification record](docs/VERIFICATION.md).
 
-The cloud entrypoint was also exercised as local processes with Caddy 2.10.2, including HTTP,
-API authentication, feedback, WebSocket upgrades, health checks, and graceful shutdown. That
-is application-startup verification, not a Docker build or public deployment.
+[GitHub's Python and Docker checks passed](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465119077).
+The configured PC demo runs at http://localhost:10080; this address is local to that PC.
+Public Render hosting is pending: the authenticated creation request returned HTTP 402,
+requiring account payment information despite the requested free plan. No hosted service was
+created. See [the recorded attempt](reports/render/deployment_attempt.json).
+
+[Published Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys):
+
+```bash
+docker pull ghcr.io/jill-vekariya/atlas-recsys:latest
+docker run --rm -p 127.0.0.1:10000:10000 -e ATLAS_EPHEMERAL=true ghcr.io/jill-vekariya/atlas-recsys:latest
+```
+
+Anonymous registry access and the published digest were verified. For a reproducible deployment,
+pin the digest in [the image manifest](reports/deployment/image-manifest.json).
+
+[Create the Render demo from this repository](https://render.com/deploy?repo=https://github.com/Jill-Vekariya/atlas-recsys).
 
 ## Data and experiments
 
@@ -165,7 +181,7 @@ automatically retrain a model or turn clicks into purchase labels. See the data 
 
 ## Publishing
 
-Use `scripts/publish_github.sh` after authenticating GitHub CLI and configuring your own Git
+Use `scripts/publish_github.sh` for a new fork after authenticating GitHub CLI and configuring your own Git
 author identity. It defaults to a private repository. Set `ATLAS_VISIBILITY=public` to deliberately
 publish publicly. CI checks Python behavior and a Docker Compose startup. A separate workflow
 publishes the container to GHCR when manually invoked or when a version tag is pushed.

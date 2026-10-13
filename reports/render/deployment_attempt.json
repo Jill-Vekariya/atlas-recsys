@@ -1,0 +1,25 @@
+{
+    "checked_at_utc":  "2026-10-13T20:59:09.1888439Z",
+    "provider":  "Render",
+    "cli_version":  "2.28.0",
+    "authentication":  "Official CLI browser authorization completed",
+    "requested_plan":  "free",
+    "requested_region":  "singapore",
+    "attempts":  [
+                     {
+                         "source":  "Published immutable GHCR image",
+                         "runtime":  "image",
+                         "http_status":  402
+                     },
+                     {
+                         "source":  "Public GitHub repository",
+                         "runtime":  "docker",
+                         "http_status":  402
+                     }
+                 ],
+    "result":  "Blocked by account payment-information requirement",
+    "service_created":  false,
+    "public_url":  null,
+    "error_message":  "Payment information is required to complete this request",
+    "passed":  false
+}

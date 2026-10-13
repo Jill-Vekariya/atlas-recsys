@@ -7,15 +7,23 @@
 | Real-data evaluation | Recorded | Amazon and MovieLens JSON reports |
 | Local HTTP benchmark | Recorded | `reports/movielens/http_load.json` |
 | Cloud entrypoint application check | Passed locally | `reports/synthetic/cloud_startup.json` |
-| Public GitHub repository | Pending account connection | No URL yet |
-| Docker CI run | Pending GitHub execution | No passed-run URL yet |
-| Published Docker image | Pending GHCR execution | No image digest yet |
-| Live Render demo | Pending account connection/deploy | No public URL yet |
+| Local Docker deployment | Passed | `reports/synthetic/docker_startup.json`; PC demo at http://localhost:10080 |
+| Public GitHub repository | Published | https://github.com/Jill-Vekariya/atlas-recsys |
+| Docker CI run | Passed | https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465119077 |
+| Published Docker image | Published and anonymously accessible | `ghcr.io/jill-vekariya/atlas-recsys:latest`; digest in `reports/deployment/image-manifest.json` |
+| Live Render demo | Blocked by Render account requirement | Authenticated free-plan creation returned HTTP 402; no public URL yet |
 
 Fill external URLs only from successful platform responses. The locally tested system and
 prepared Docker configuration can be described now; “deployed” requires the corresponding
 service to be running and verified.
 
-For the current implementation, use the implementation résumé example in INTERVIEW_GUIDE.md.
-After remote publication, use the deployment example in RENDER_DEPLOYMENT.md and include your
-actual repository/demo links. Personal ownership exercises remain yours to complete.
+Current evidence supports:
+
+“Built and containerized an end-to-end recommendation platform using PyTorch, FAISS, LightGBM,
+and FastAPI; evaluated chronological Amazon/MovieLens workloads and added GitHub Actions tests,
+authenticated serving, idempotent feedback, monitoring, and verified rollback.”
+
+The recorded MovieLens load test measured 500 requests at about 50 requests/second with roughly
+56 ms p95 on a local CPU host. Identify that workload if using the number; it is not hosted latency.
+After verified public hosting, add the actual demo URL. Personal ownership exercises remain yours
+to complete so you can explain the evaluation, failed model comparisons, and operational choices.
