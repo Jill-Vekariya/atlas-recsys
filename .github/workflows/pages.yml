@@ -1,0 +1,57 @@
+name: github-pages-demo
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+jobs:
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Check browser model against Python reference fixtures
+        run: |
+          node --check web/app.js
+          node --test web/tests/engine.test.js
+      - name: Install pinned browser test tooling
+        working-directory: web
+        run: npm ci --no-audit --no-fund
+      - name: Verify real browser interactions
+        working-directory: web
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:ui
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-verification
+          path: |
+            web/tests/verification.json
+            web/test-results/
+      - uses: actions/configure-pages@v5
+      - name: Prepare public files
+        run: |
+          mkdir public-site
+          cp web/index.html web/style.css web/app.js web/engine.js web/model.json web/evidence.json web/favicon.svg web/.nojekyll public-site/
+          cp web/tests/verification.json public-site/model-verification.json
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: public-site
+      - name: Deploy verified browser demonstration
+        id: deployment
+        uses: actions/deploy-pages@v4

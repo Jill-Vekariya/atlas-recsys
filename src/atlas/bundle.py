@@ -104,7 +104,15 @@ class Bundle:
             selected_scores = scores[indices]
         elif algorithm == "als":
             q = fold_in_als(history, self.als_factors, gram=self.als_gram)
-            scores = self.als_factors @ q
+            if float(np.linalg.norm(q)) < 1e-9:
+                # Content remains informative when every onboarding seed has zero ALS factors.
+                q = l2_normalize(
+                    context(history, self.content, self.config["history_size"], recency).reshape(1, -1)
+                )[0]
+                scores = self.content @ q
+                reason = "als_no_signal"
+            else:
+                scores = self.als_factors @ q
             indices = eligible[np.argsort(-scores[eligible], kind="stable")[:k]]
             selected_scores = scores[indices]
         elif algorithm == "content":

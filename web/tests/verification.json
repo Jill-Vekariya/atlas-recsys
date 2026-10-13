@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "reference": "Python NumPy/FAISS serving arrays and LightGBM Booster.predict",
+  "profiles": 16,
+  "catalog_size": 300,
+  "max_absolute_errors": {
+    "query": 8.940696716308594e-8,
+    "tower": 1.7881393432617188e-7,
+    "als": 0.000001996755599975586,
+    "features": 1.7881393432617188e-7,
+    "ranker": 0,
+    "end_to_end_ranker": 0
+  },
+  "retrieval": "Exact exhaustive scoring; not the Docker HNSW implementation",
+  "tie_rule": "Descending score, then catalog index; near-tied rankings may differ from FAISS"
+}

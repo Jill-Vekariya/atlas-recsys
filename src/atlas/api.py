@@ -155,6 +155,8 @@ def create_app(state_path=None, db_path=None, api_key=None, allow_faults=False):
             if reason in {"no_positive_history", "retrieval_failure", "retrieval_deadline_exceeded"}
             else "tower"
             if reason == "ranker_unavailable"
+            else "content"
+            if reason == "als_no_signal"
             else algorithm
         )
         recommendations = [

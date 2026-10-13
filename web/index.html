@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d22">
+  <meta name="description" content="Atlas recommendation lab: try personalized recommendations, compare trained models, and inspect real evaluation evidence. Free browser inference, hosted on GitHub Pages.">
+  <title>Atlas · Recommendation Lab</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to the recommendation lab</a>
+  <header class="topbar">
+    <a class="brand" href="#explore" aria-label="Atlas home"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor"/><path d="M25 10 22 23 10 28 16 16Z" fill="currentColor"/></svg><span>atlas<span class="brand-sub">RECOMMENDATION LAB</span></span></a>
+    <nav aria-label="Main navigation"><button class="nav active" data-tab="explore" aria-pressed="true">Explore</button><button class="nav" data-tab="evidence" aria-pressed="false">Evidence</button><button class="nav" data-tab="system" aria-pressed="false">System</button></nav>
+    <a class="source-link" href="https://github.com/Jill-Vekariya/atlas-recsys" target="_blank" rel="noopener">Source on GitHub <span aria-hidden="true">↗</span></a>
+  </header>
+  <main>
+    <section class="hero">
+      <div><p class="eyebrow">A PERSONALIZATION ENGINE YOU CAN INSPECT</p><h1>A better<br><em>next pick.</em></h1><p class="intro">Change your taste. Compare the models.<br>See what moves a recommendation to the top.</p></div>
+      <aside class="hero-card"><div class="status"><span class="status-dot" id="status-dot"></span><span id="model-status" role="status">Loading verified model…</span></div><div class="hero-number" id="catalog-count">—<span>items to explore</span></div><div class="mini-stats"><div><strong id="profile-count">—</strong><span>example profiles</span></div><div><strong id="tree-count">—</strong><span>ranking trees</span></div></div><p>Trained in Python.<br>Inference in your browser.</p></aside>
+    </section>
+    <div class="notice"><span class="notice-symbol" aria-hidden="true">◈</span><p><strong>A working model, a synthetic catalog.</strong> Example products and profiles are simulated. Real Amazon and MovieLens research results are in the Evidence tab.</p><span class="notice-tag">NO SIGN-IN · FREE</span></div>
+    <p id="load-error" class="error" role="alert" hidden></p>
+    <section id="explore" class="tab-panel" aria-label="Recommendation lab">
+      <div class="workspace" id="workspace">
+        <aside class="controls panel">
+          <div class="section-heading"><span class="step">01</span><h2>Your taste</h2></div>
+          <div class="segmented" aria-label="Profile mode"><button data-mode="existing" class="selected" aria-pressed="true">Example profile</button><button data-mode="new" aria-pressed="false">New user</button></div>
+          <div id="existing-controls"><label for="profile">Choose a profile</label><select id="profile" disabled><option>Loading profiles…</option></select><div class="profile-history" id="history-preview"></div></div>
+          <div id="new-controls" hidden><p class="control-copy">Choose a few interests to start. Without preferences, Atlas uses popularity.</p><div class="preference-grid" id="preferences"></div></div>
+          <hr>
+          <label for="algorithm">Recommendation model</label>
+          <select id="algorithm" disabled><option value="auto">Auto · validation-selected</option><option value="ranked">Two-tower + LightGBM ranker</option><option value="tower">Two-tower retrieval</option><option value="als">Implicit ALS</option><option value="content">Content similarity</option><option value="category_popularity">Category popularity</option><option value="popularity">Popularity baseline</option></select>
+          <p id="algorithm-description" class="control-copy"></p>
+          <div class="control-pair"><div><label for="budget">Candidates</label><select id="budget"><option>50</option><option selected>100</option><option>200</option><option>300</option></select></div><div><label for="category">Category</label><select id="category"><option value="">All categories</option></select></div></div>
+          <label class="check"><input type="checkbox" id="cold-only"><span>Only items withheld from training</span></label>
+          <button id="recommend" class="primary" disabled>Find recommendations <span aria-hidden="true">↗</span></button>
+          <p class="privacy-copy">Likes and skips stay in this browser. They update your session taste, not the trained weights.</p>
+          <button class="text-button" id="reset">Reset this profile's feedback</button>
+        </aside>
+        <div class="results-area">
+          <div class="results-header"><div><p class="eyebrow">YOUR NEXT TEN</p><h2>Recommended for you</h2></div><span class="run-badge" id="run-badge">Ready when you are</span></div>
+          <div class="run-stats" id="run-stats" hidden><div><span>Browser inference</span><strong id="inference-time">—</strong></div><div><span>Effective model</span><strong id="effective-model">—</strong></div><div><span>Held-out picks</span><strong id="cold-count">—</strong></div></div>
+          <p id="fallback-notice" class="fallback" hidden></p>
+          <div id="recommendations" class="recommendations" aria-live="polite"><div class="loading-state"><span class="loader"></span><h3>Loading the trained bundle</h3><p>No API key or local server needed.</p></div></div>
+          <p class="result-footnote">Scores are relative ranking signals, not probabilities. Held-out items had no interactions in either training window. Feature diagnostics are not causal explanations.</p>
+          <div class="feedback-toast" id="feedback-toast" role="status" hidden></div>
+        </div>
+      </div>
+    </section>
+    <section id="evidence" class="tab-panel" aria-label="Experiment evidence" hidden>
+      <div class="evidence-heading"><p class="eyebrow">MEASUREMENTS, INCLUDING THE FAILURES</p><h2>What the experiments actually show.</h2><p>Global chronological splits. Full-catalog evaluation. Strong baselines kept in view.</p></div>
+      <div class="evidence-controls"><label for="dataset">Research workload</label><select id="dataset"><option value="movielens">MovieLens</option><option value="amazon">Amazon Reviews 2023 sample</option></select><span id="dataset-summary"></span></div>
+      <div class="evidence-layout"><div class="panel chart-panel"><h3>Test NDCG@10</h3><p class="control-copy">Higher is better. Test data did not choose the serving default.</p><div id="quality-chart" class="quality-chart"></div></div><div class="panel table-panel"><h3>Quality and catalog reach</h3><div class="table-scroll"><table><thead><tr><th>Model</th><th>Recall@100</th><th>NDCG@10</th><th>Coverage@10</th><th>Cold recall</th></tr></thead><tbody id="quality-table"></tbody></table></div></div></div>
+      <div class="finding panel" id="finding"></div>
+      <div class="benchmark panel"><div><p class="eyebrow">RECORDED LOCAL HTTP BENCHMARK</p><h3>A serving measurement with context.</h3><p id="benchmark-context"></p></div><div class="benchmark-stats" id="benchmark-stats"></div></div>
+      <a class="inline-link" href="https://github.com/Jill-Vekariya/atlas-recsys/blob/main/docs/RESULTS.md" target="_blank" rel="noopener">Read protocol, ablations, uncertainty, and failure analysis ↗</a>
+    </section>
+    <section id="system" class="tab-panel" aria-label="System design" hidden>
+      <div class="evidence-heading"><p class="eyebrow">ONE PROJECT, TWO SERVING PATHS</p><h2>Small enough to inspect.<br>Complete enough to defend.</h2><p>The free GitHub demo executes exported model parameters. The Docker backend covers API serving and operational behavior.</p></div>
+      <div class="system-grid"><article class="panel"><span class="step">A</span><h3>Browser demonstration</h3><p>GitHub Pages hosts the app and synthetic model bundle. JavaScript computes history features, two-tower projections, exact retrieval, ALS fold-in, and LightGBM tree scores.</p><ul><li>No account, card, or running PC needed</li><li>No API keys or external inference calls</li><li>Feedback stored only on your device</li><li>Numerical checks against Python reference outputs</li></ul><a class="inline-link" href="https://github.com/Jill-Vekariya/atlas-recsys/tree/main/web" target="_blank" rel="noopener">Inspect browser inference ↗</a></article><article class="panel"><span class="step">B</span><h3>Docker serving platform</h3><p>FastAPI and FAISS serve verified bundles behind Caddy. Streamlit supplies the API-backed lab, while SQLite separates exposures from feedback.</p><ul><li>API authentication and Prometheus metrics</li><li>FAISS exact and HNSW retrieval</li><li>Idempotent feedback and persistent volumes</li><li>Canary assignment, guardrails, and rollback</li></ul><code>ghcr.io/jill-vekariya/atlas-recsys:v0.1.0</code><a class="inline-link" href="https://github.com/Jill-Vekariya/atlas-recsys/blob/main/docs/DEPLOYMENT.md" target="_blank" rel="noopener">Run the full backend ↗</a></article></div>
+      <div class="panel integrity"><h3>Model provenance</h3><dl id="provenance"></dl><p class="control-copy">Exact browser retrieval replaces HNSW for this 300-item catalog. Deterministic tie handling and floating-point reductions can alter near-tied ordering. This demo does not establish production scale, online business lift, or public API latency.</p></div>
+      <div class="resource-links"><a href="https://github.com/Jill-Vekariya/atlas-recsys/blob/main/docs/INTERVIEW_GUIDE.md" target="_blank" rel="noopener">Interview guide ↗</a><a href="https://github.com/Jill-Vekariya/atlas-recsys/blob/main/docs/OWNERSHIP.md" target="_blank" rel="noopener">Reproduction exercises ↗</a><a href="https://github.com/Jill-Vekariya/atlas-recsys/blob/main/docs/DATA_CARD.md" target="_blank" rel="noopener">Data card ↗</a></div>
+    </section>
+    <footer><span>atlas <span class="footer-divider">/</span> Recommendation engineering, made inspectable.</span><a href="https://github.com/Jill-Vekariya/atlas-recsys" target="_blank" rel="noopener">Built in the open ↗</a></footer>
+  </main>
+  <noscript><div class="error">Enable JavaScript to run browser inference. The source and evaluation reports are available on GitHub.</div></noscript>
+</body>
+</html>

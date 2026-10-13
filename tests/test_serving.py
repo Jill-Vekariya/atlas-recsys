@@ -56,6 +56,23 @@ def test_preference_onboarding_and_category_filter(tmp_path, trained):
     assert all(x["title"].startswith("audio") for x in result["recommendations"])
 
 
+def test_als_onboarding_without_collaborative_signal_uses_content(tmp_path, trained):
+    client, app = make_client(tmp_path, trained)
+    bundle = next(iter(app.state.registry.bundles.values()))
+    category = bundle.items[0]["category"]
+    bundle.als_factors[0] = 0
+    request = {"user_id": "new-cold-seed", "preferred_categories": [category]}
+    response = client.post("/recommend", json={**request, "algorithm": "als"}).json()
+    content = client.post("/recommend", json={**request, "algorithm": "content"}).json()
+    assert response["fallback_reason"] == "als_no_signal"
+    assert response["effective_algorithm"] == "content"
+    assert response["onboarding_preferences_used"]
+    assert [x["item_id"] for x in response["recommendations"]] == [
+        x["item_id"] for x in content["recommendations"]
+    ]
+    assert any(x["score"] > 0 for x in response["recommendations"])
+
+
 def test_invalid_request_and_auth(tmp_path, trained):
     client, _ = make_client(tmp_path, trained, key="test-key")
     assert client.post("/recommend", json={"user_id": "u"}).status_code == 401
