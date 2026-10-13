@@ -44,12 +44,13 @@ jobs:
           tags: atlas:release-test
       - name: Smoke-test container before publication
         run: |
-          docker run -d --name atlas-release -p 127.0.0.1:10000:10000 atlas:release-test
+          docker run -d --name atlas-release -p 127.0.0.1:10000:10000 -e ATLAS_API_KEY=release-check -e ATLAS_EPHEMERAL=true atlas:release-test
           for attempt in $(seq 1 60); do
-            if curl --fail --silent http://127.0.0.1:10000/api/ready; then break; fi
+            if curl --fail --silent http://127.0.0.1:10000/api/ready && curl --fail --silent http://127.0.0.1:10000/_stcore/health; then break; fi
             sleep 2
           done
           curl --fail http://127.0.0.1:10000/_stcore/health
+          docker exec atlas-release python scripts/verify_deployment.py
           docker rm -f atlas-release
       - uses: docker/build-push-action@v6
         with:

@@ -10,3 +10,5 @@ mlruns/
 .env
 reports/**/canary_sandbox/
 dist/
+*.egg-info/
+build/

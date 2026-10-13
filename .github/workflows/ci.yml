@@ -41,7 +41,14 @@ jobs:
           done
           docker compose logs
           exit 1
-      - run: curl --fail http://127.0.0.1:8501/_stcore/health
+      - name: Wait for Streamlit
+        run: |
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:8501/_stcore/health; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs demo
+          exit 1
       - run: curl --fail -H 'Content-Type:application/json' -d '{"user_id":"ci-new-user"}' http://127.0.0.1:8000/recommend
       - name: Build self-contained cloud image
         run: docker build --target cloud -t atlas:ci-cloud .
@@ -50,11 +57,17 @@ jobs:
       - name: Verify cloud API and frontend
         run: |
           for attempt in $(seq 1 60); do
-            if curl --fail --silent http://127.0.0.1:10000/api/ready; then break; fi
+            if curl --fail --silent http://127.0.0.1:10000/api/ready && curl --fail --silent http://127.0.0.1:10000/_stcore/health; then break; fi
             sleep 2
           done
           curl --fail http://127.0.0.1:10000/_stcore/health
           curl --fail -H 'X-API-Key:ci-key' -H 'Content-Type:application/json' -d '{"user_id":"ci-cloud-user"}' http://127.0.0.1:10000/api/recommend
+          docker exec atlas-cloud python scripts/verify_deployment.py --output /tmp/deployment.json
+          docker cp atlas-cloud:/tmp/deployment.json ./cloud-deployment.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cloud-deployment-verification
+          path: cloud-deployment.json
       - if: always()
         run: docker compose down -v
       - if: always()
