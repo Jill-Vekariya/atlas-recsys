@@ -1,0 +1,82 @@
+{
+  "split": "validation",
+  "synthetic": false,
+  "ann_tradeoffs": [
+    {
+      "ef_search": 8,
+      "candidate_count": 20,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.6428571428571429,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 2.082690899987938
+    },
+    {
+      "ef_search": 8,
+      "candidate_count": 100,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.44571428571428573,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.3598493999779748
+    },
+    {
+      "ef_search": 8,
+      "candidate_count": 200,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.37714285714285717,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.8671501497010468
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 20,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.8857142857142858,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.2301781503538223
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 100,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.7714285714285715,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.337090749939307
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 200,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.7314285714285714,
+      "ndcg_at_10": 0.005675505673769101,
+      "sequential_p95_ms": 1.670514699662817
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 20,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.9285714285714286,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.5992175994142597
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 100,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.9157142857142858,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.7766961000234005
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 200,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.9699999999999999,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.8962591499985137
+    }
+  ],
+  "history_weighting_ablation": {
+    "uniform": 0.0,
+    "weighted": 0.0
+  }
+}

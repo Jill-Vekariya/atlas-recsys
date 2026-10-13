@@ -1,0 +1,61 @@
+{
+  "source": "amazon",
+  "synthetic": false,
+  "category": "All_Beauty",
+  "raw_sha256": {
+    "All_Beauty.jsonl.gz": "ee00e66835567c3f12fde6a482f8d7055c22cac2d0924f677263affdd8a0e349",
+    "meta_All_Beauty.jsonl.gz": "51f8255c2794afd60e274c10d3e2d09dc1f671eba4ba35f74f748d8631216d05"
+  },
+  "raw_reviews_scanned": 701528,
+  "catalog_sampling": "Lowest SHA256 item hashes from metadata, independent of review labels",
+  "warning": "Later metadata snapshot assumed available; no actual product introduction times",
+  "items": 4000,
+  "events": 22555,
+  "users": 22416,
+  "boundaries": {
+    "retriever_end": 1584119069,
+    "ranker_end": 1612734324,
+    "validation_end": 1629898645
+  },
+  "withheld_training_events": 2123,
+  "controlled_cold_items": 543,
+  "positive_rating": 4.0,
+  "seed": 42,
+  "metadata_protocol": "Transductive catalog snapshot; text transforms fit on this catalog",
+  "split_counts": {
+    "retriever": 13134,
+    "test": 3702,
+    "ranker": 3251,
+    "validation": 2468
+  },
+  "checksums": {
+    "events.parquet": "2da35e2232fbae4295fbedd14c9b8b02affb73307f13fe03b907f0a9df65206e",
+    "items.parquet": "e26aecdd3b15e63ecf9c0c1ec5fc9ae032760025500a0c6081d187a7f9ac1caa"
+  },
+  "audit": [
+    {
+      "split": "ranker",
+      "n_events": 3251,
+      "n_users": 3236,
+      "positive_share": 0.699169486311904
+    },
+    {
+      "split": "retriever",
+      "n_events": 13134,
+      "n_users": 13099,
+      "positive_share": 0.7526267702147099
+    },
+    {
+      "split": "test",
+      "n_events": 3702,
+      "n_users": 3686,
+      "positive_share": 0.6274986493787142
+    },
+    {
+      "split": "validation",
+      "n_events": 2468,
+      "n_users": 2460,
+      "positive_share": 0.6503241491085899
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+# Standalone VM deployment. Requires a domain pointing to the VM and Docker Compose.
+services:
+  bootstrap:
+    build:
+      context: ..
+      target: training
+    image: atlas:production
+    command: ["python", "scripts/bootstrap.py"]
+    volumes:
+      - atlas-artifacts:/app/artifacts
+      - atlas-data:/app/data
+      - atlas-reports:/app/reports
+    restart: "no"
+  api:
+    image: atlas:production
+    command: ["atlas", "serve", "--host", "0.0.0.0"]
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+    environment:
+      ATLAS_API_KEY: ${ATLAS_API_KEY:?Set ATLAS_API_KEY}
+      ATLAS_ROOT_PATH: /api
+    volumes:
+      - atlas-artifacts:/app/artifacts
+    restart: unless-stopped
+  demo:
+    image: atlas:production
+    command: ["streamlit", "run", "src/atlas/ui.py", "--server.address=0.0.0.0", "--server.port=8501", "--browser.gatherUsageStats=false"]
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      ATLAS_API_URL: http://api:8000
+      ATLAS_API_KEY: ${ATLAS_API_KEY:?Set ATLAS_API_KEY}
+    volumes:
+      - atlas-artifacts:/app/artifacts:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+  caddy:
+    image: caddy:2-alpine
+    depends_on:
+      demo:
+        condition: service_healthy
+    environment:
+      ATLAS_DOMAIN: ${ATLAS_DOMAIN:?Set ATLAS_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+volumes:
+  atlas-artifacts:
+  atlas-data:
+  atlas-reports:
+  caddy-data:
+  caddy-config:

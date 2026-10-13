@@ -1,0 +1,142 @@
+{
+  "source": "synthetic",
+  "synthetic": true,
+  "split": "validation",
+  "protocol": "Full fixed catalog snapshot; exclude all pre-cutoff rated items; macro average users",
+  "population": {
+    "eligible_users": 96,
+    "sampled_users": 96,
+    "prediction_cutoff": 1700539910
+  },
+  "results": {
+    "popularity": {
+      "recall_at_100": 0.34893353174603176,
+      "ndcg_at_10": 0.034706469075559014,
+      "precision_at_10": 0.013541666666666667,
+      "catalog_coverage_at_10": 0.08,
+      "mean_recommended_train_popularity": 18.916666666666668,
+      "fallback_rate": 0.0,
+      "local_sequential_p95_ms": 0.0672937496801751,
+      "returning_users": 96,
+      "returning_ndcg_at_10": 0.034706469075559014,
+      "new_user_ndcg_at_10": null,
+      "controlled_cold_recall_at_100": 0.0,
+      "cold_evaluation_users": 55,
+      "head_recall_at_100": 0.5180894308943089,
+      "low_history_recall_at_100": 0.0,
+      "zero_history_recall_at_100": 0.0
+    },
+    "category_popularity": {
+      "recall_at_100": 1.0,
+      "ndcg_at_10": 0.2401367115219313,
+      "precision_at_10": 0.11145833333333334,
+      "catalog_coverage_at_10": 0.6366666666666667,
+      "mean_recommended_train_popularity": 11.104712041884817,
+      "fallback_rate": 0.0,
+      "local_sequential_p95_ms": 0.14383700010967004,
+      "returning_users": 96,
+      "returning_ndcg_at_10": 0.2401367115219313,
+      "new_user_ndcg_at_10": null,
+      "controlled_cold_recall_at_100": 1.0,
+      "cold_evaluation_users": 55,
+      "head_recall_at_100": 1.0,
+      "low_history_recall_at_100": 1.0,
+      "zero_history_recall_at_100": 1.0
+    },
+    "als": {
+      "recall_at_100": 0.7120535714285715,
+      "ndcg_at_10": 0.25222515249876937,
+      "precision_at_10": 0.11875000000000001,
+      "catalog_coverage_at_10": 0.7566666666666667,
+      "mean_recommended_train_popularity": 10.361233480176212,
+      "fallback_rate": 0.0,
+      "local_sequential_p95_ms": 0.2700507499184823,
+      "returning_users": 96,
+      "returning_ndcg_at_10": 0.25222515249876937,
+      "new_user_ndcg_at_10": null,
+      "controlled_cold_recall_at_100": 0.0,
+      "cold_evaluation_users": 55,
+      "head_recall_at_100": 0.9914634146341463,
+      "low_history_recall_at_100": 0.975,
+      "zero_history_recall_at_100": 0.0
+    },
+    "content": {
+      "recall_at_100": 1.0,
+      "ndcg_at_10": 0.1837393819290516,
+      "precision_at_10": 0.09166666666666667,
+      "catalog_coverage_at_10": 0.49333333333333335,
+      "mean_recommended_train_popularity": 7.851351351351352,
+      "fallback_rate": 0.0,
+      "local_sequential_p95_ms": 0.21184600007018162,
+      "returning_users": 96,
+      "returning_ndcg_at_10": 0.1837393819290516,
+      "new_user_ndcg_at_10": null,
+      "controlled_cold_recall_at_100": 1.0,
+      "cold_evaluation_users": 55,
+      "head_recall_at_100": 1.0,
+      "low_history_recall_at_100": 1.0,
+      "zero_history_recall_at_100": 1.0
+    },
+    "tower": {
+      "recall_at_100": 1.0,
+      "ndcg_at_10": 0.24782103323068316,
+      "precision_at_10": 0.09895833333333333,
+      "catalog_coverage_at_10": 0.5766666666666667,
+      "mean_recommended_train_popularity": 9.15606936416185,
+      "fallback_rate": 0.0,
+      "local_sequential_p95_ms": 0.42204900012166036,
+      "returning_users": 96,
+      "returning_ndcg_at_10": 0.24782103323068316,
+      "new_user_ndcg_at_10": null,
+      "controlled_cold_recall_at_100": 1.0,
+      "cold_evaluation_users": 55,
+      "head_recall_at_100": 1.0,
+      "low_history_recall_at_100": 1.0,
+      "zero_history_recall_at_100": 1.0
+    },
+    "ranked": {
+      "recall_at_100": 1.0,
+      "ndcg_at_10": 0.20476949818995513,
+      "precision_at_10": 0.096875,
+      "catalog_coverage_at_10": 0.7333333333333333,
+      "mean_recommended_train_popularity": 9.922727272727272,
+      "fallback_rate": 0.0,
+      "local_sequential_p95_ms": 0.9057590002612415,
+      "returning_users": 96,
+      "returning_ndcg_at_10": 0.20476949818995513,
+      "new_user_ndcg_at_10": null,
+      "controlled_cold_recall_at_100": 1.0,
+      "cold_evaluation_users": 55,
+      "head_recall_at_100": 1.0,
+      "low_history_recall_at_100": 1.0,
+      "zero_history_recall_at_100": 1.0
+    }
+  },
+  "paired_comparisons": {
+    "ranked_minus_als": {
+      "mean_delta": -0.04745565430881423,
+      "ci95": [
+        -0.10810470925458662,
+        0.008015532180598202
+      ],
+      "unit": "absolute NDCG@10",
+      "resampling_unit": "user"
+    },
+    "tower_minus_content": {
+      "mean_delta": 0.06408165130163153,
+      "ci95": [
+        -0.0014156606194342066,
+        0.1294824620526274
+      ],
+      "unit": "absolute NDCG@10",
+      "resampling_unit": "user"
+    }
+  },
+  "limitations": [
+    "Review/rating preference proxy; no business uplift",
+    "Metadata snapshot is not historically reconstructed",
+    "Single seed; confidence intervals do not include training variance",
+    "Latency here is in-process and sequential, not an HTTP load test"
+  ],
+  "selected_algorithm": "als"
+}

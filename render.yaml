@@ -1,0 +1,22 @@
+# Public synthetic portfolio demo. Free-tier feedback storage is ephemeral.
+services:
+  - type: web
+    name: atlas-recsys-demo
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/ready
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: ATLAS_API_KEY
+        generateValue: true
+      - key: ATLAS_EPHEMERAL
+        value: "true"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"

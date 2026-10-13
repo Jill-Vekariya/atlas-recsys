@@ -1,0 +1,38 @@
+{
+  "tower": {
+    "examples": 27,
+    "epoch_losses": [
+      4.207447528839111,
+      3.5165858268737793,
+      2.925449848175049,
+      2.602552890777588,
+      2.3210861682891846
+    ],
+    "status": "trained"
+  },
+  "als": {
+    "factors": 32,
+    "regularization": 0.1,
+    "alpha": 20.0,
+    "iterations": 12,
+    "training_users": 9858
+  },
+  "ranker": {
+    "training_queries": 50,
+    "excluded_uninformative_queries": 250,
+    "protocol": "Frozen A retriever, A histories/features, B targets; no forced positive injection",
+    "status": "trained"
+  },
+  "training_seconds": 13.759368434999942,
+  "hardware": {
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "python": "3.12.14",
+    "training_device": "CPU"
+  },
+  "mlflow": {
+    "enabled": true,
+    "run_id": "ed488656877b4106b1ac5fa483bb6877",
+    "status": "logged"
+  }
+}

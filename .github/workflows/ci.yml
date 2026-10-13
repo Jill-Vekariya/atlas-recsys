@@ -1,0 +1,61 @@
+name: checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      OMP_NUM_THREADS: 1
+      OPENBLAS_NUM_THREADS: 1
+      MLFLOW_DISABLE_AGENT_HINT: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install uv==0.12.23
+      - run: uv sync --frozen --extra dev
+      - run: uv run ruff check src tests scripts
+      - run: uv run ruff format --check src tests scripts
+      - run: uv run pytest -q
+      - run: uv run atlas smoke --config configs/smoke.yaml
+      - run: uv run atlas canary-demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-verification
+          path: reports/synthetic/*.json
+  container:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose up --build -d
+      - name: Wait for API
+        run: |
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent http://127.0.0.1:8000/ready; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs
+          exit 1
+      - run: curl --fail http://127.0.0.1:8501/_stcore/health
+      - run: curl --fail -H 'Content-Type:application/json' -d '{"user_id":"ci-new-user"}' http://127.0.0.1:8000/recommend
+      - name: Build self-contained cloud image
+        run: docker build --target cloud -t atlas:ci-cloud .
+      - name: Start cloud image
+        run: docker run -d --name atlas-cloud -p 127.0.0.1:10000:10000 -e ATLAS_API_KEY=ci-key -e ATLAS_EPHEMERAL=true atlas:ci-cloud
+      - name: Verify cloud API and frontend
+        run: |
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:10000/api/ready; then break; fi
+            sleep 2
+          done
+          curl --fail http://127.0.0.1:10000/_stcore/health
+          curl --fail -H 'X-API-Key:ci-key' -H 'Content-Type:application/json' -d '{"user_id":"ci-cloud-user"}' http://127.0.0.1:10000/api/recommend
+      - if: always()
+        run: docker compose down -v
+      - if: always()
+        run: docker rm -f atlas-cloud || true

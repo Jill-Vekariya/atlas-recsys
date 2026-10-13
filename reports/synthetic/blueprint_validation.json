@@ -1,0 +1,6 @@
+{
+  "schema_url": "https://render.com/schema/render.yaml.json",
+  "schema_validation": "passed",
+  "validation": "JSON Schema validation of local render.yaml",
+  "remote_service_created": false
+}

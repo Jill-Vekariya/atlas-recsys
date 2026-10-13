@@ -1,0 +1,10 @@
+{$ATLAS_DOMAIN} {
+    encode gzip
+    redir /api /api/docs 307
+    handle_path /api/* {
+        reverse_proxy api:8000
+    }
+    handle {
+        reverse_proxy demo:8501
+    }
+}

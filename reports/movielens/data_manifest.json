@@ -1,0 +1,56 @@
+{
+  "source": "movielens",
+  "synthetic": false,
+  "url": "https://files.grouplens.org/datasets/movielens/ml-latest-small.zip",
+  "raw_sha256": "696d65a3dfceac7c45750ad32df2c259311949efec81f0f144fdfb91ebc9e436",
+  "warning": "Later catalog snapshot assumed available; timestamps describe ratings, not views",
+  "items": 9742,
+  "events": 89268,
+  "users": 610,
+  "boundaries": {
+    "retriever_end": 1258420912,
+    "ranker_end": 1435994144,
+    "validation_end": 1479542661
+  },
+  "withheld_training_events": 11568,
+  "controlled_cold_items": 1459,
+  "positive_rating": 4.0,
+  "seed": 42,
+  "metadata_protocol": "Transductive catalog snapshot; text transforms fit on this catalog",
+  "split_counts": {
+    "retriever": 51227,
+    "test": 15126,
+    "ranker": 12832,
+    "validation": 10083
+  },
+  "checksums": {
+    "events.parquet": "e22e9ebe9f43020f9736bbeb67c5b247e14201a8318648b97f8bca1814cc8550",
+    "items.parquet": "9da5c41d7f3ebf080333be1ec748d68a0a40fbd45ae1fadfab80b28c65223141"
+  },
+  "audit": [
+    {
+      "split": "ranker",
+      "n_events": 12832,
+      "n_users": 131,
+      "positive_share": 0.5157418952618454
+    },
+    {
+      "split": "retriever",
+      "n_events": 51227,
+      "n_users": 381,
+      "positive_share": 0.48675503152634353
+    },
+    {
+      "split": "test",
+      "n_events": 15126,
+      "n_users": 96,
+      "positive_share": 0.42324474414914715
+    },
+    {
+      "split": "validation",
+      "n_events": 10083,
+      "n_users": 71,
+      "positive_share": 0.5246454428245562
+    }
+  ]
+}

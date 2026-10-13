@@ -1,0 +1,54 @@
+{
+  "source": "synthetic",
+  "synthetic": true,
+  "warning": "Engineered category preference fixture; not real behavior or business evidence",
+  "items": 300,
+  "events": 5093,
+  "users": 100,
+  "boundaries": {
+    "retriever_end": 1700431928,
+    "ranker_end": 1700539910,
+    "validation_end": 1700611898
+  },
+  "withheld_training_events": 907,
+  "controlled_cold_items": 58,
+  "positive_rating": 4.0,
+  "seed": 42,
+  "metadata_protocol": "Transductive catalog snapshot; text transforms fit on this catalog",
+  "split_counts": {
+    "retriever": 2868,
+    "test": 900,
+    "ranker": 725,
+    "validation": 600
+  },
+  "checksums": {
+    "events.parquet": "a7958f74c944294f43ee195646de628e9fd1b2468355802f169936f39603e4e0",
+    "items.parquet": "827198f58470acb5fa1cfb50cfe6626c8ea0d13de62ca8499cce4b0a07d7e1f5"
+  },
+  "audit": [
+    {
+      "split": "ranker",
+      "n_events": 725,
+      "n_users": 100,
+      "positive_share": 0.8413793103448276
+    },
+    {
+      "split": "retriever",
+      "n_events": 2868,
+      "n_users": 100,
+      "positive_share": 0.8465829846582985
+    },
+    {
+      "split": "test",
+      "n_events": 900,
+      "n_users": 100,
+      "positive_share": 0.8433333333333334
+    },
+    {
+      "split": "validation",
+      "n_events": 600,
+      "n_users": 100,
+      "positive_share": 0.8616666666666667
+    }
+  ]
+}

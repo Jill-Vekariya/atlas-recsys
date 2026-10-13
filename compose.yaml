@@ -1,0 +1,51 @@
+services:
+  bootstrap:
+    build:
+      context: .
+      target: training
+    image: atlas:local
+    command: ["python", "scripts/bootstrap.py"]
+    volumes:
+      - atlas-artifacts:/app/artifacts
+      - atlas-data:/app/data
+      - atlas-reports:/app/reports
+    restart: "no"
+
+  api:
+    image: atlas:local
+    command: ["atlas", "serve", "--host", "0.0.0.0"]
+    depends_on:
+      bootstrap:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      ATLAS_API_KEY: ${ATLAS_API_KEY:-}
+    volumes:
+      - atlas-artifacts:/app/artifacts
+    restart: unless-stopped
+
+  demo:
+    image: atlas:local
+    command: ["streamlit", "run", "src/atlas/ui.py", "--server.address=0.0.0.0", "--server.port=8501", "--browser.gatherUsageStats=false"]
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8501:8501"
+    environment:
+      ATLAS_API_URL: http://api:8000
+      ATLAS_API_KEY: ${ATLAS_API_KEY:-}
+    volumes:
+      - atlas-artifacts:/app/artifacts:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  atlas-artifacts:
+  atlas-data:
+  atlas-reports:

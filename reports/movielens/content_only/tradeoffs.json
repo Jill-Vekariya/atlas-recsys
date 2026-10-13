@@ -1,0 +1,82 @@
+{
+  "split": "validation",
+  "synthetic": false,
+  "ann_tradeoffs": [
+    {
+      "ef_search": 8,
+      "candidate_count": 20,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.6535714285714286,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 1.1779883505823818
+    },
+    {
+      "ef_search": 8,
+      "candidate_count": 100,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.36214285714285716,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 1.336447499988935
+    },
+    {
+      "ef_search": 8,
+      "candidate_count": 200,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.23500000000000001,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 1.4572869496532803
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 20,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.914285714285714,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 1.4919401499355442
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 100,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.7,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 1.2846116499986238
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 200,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.4807142857142857,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 2.0575855003244214
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 20,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.9892857142857142,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 2.15576444988983
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 100,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.9749999999999999,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 2.0043172999066883
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 200,
+      "queries": 14,
+      "ann_recall_vs_exact": 0.8553571428571428,
+      "ndcg_at_10": 0.024366468312048563,
+      "sequential_p95_ms": 1.2535420995845925
+    }
+  ],
+  "history_weighting_ablation": {
+    "uniform": 0.006993780382140558,
+    "weighted": 0.024366468312048563
+  }
+}

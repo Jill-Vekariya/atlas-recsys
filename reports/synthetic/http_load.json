@@ -1,0 +1,30 @@
+{
+  "source": "synthetic",
+  "synthetic": true,
+  "target_rps": 50.0,
+  "requested_duration_seconds": 10.0,
+  "wall_seconds": 10.008193145000405,
+  "achieved_rps": 49.95906781133367,
+  "requests": 500,
+  "warmup_requests": 30,
+  "concurrency_limit": 32,
+  "p50_ms": 47.95578650009702,
+  "p95_ms": 52.188359300043885,
+  "p99_ms": 55.99763932065798,
+  "error_rate": 0.0,
+  "fallback_rate": 0.2,
+  "p95_dispatch_lag_ms": 2.1110617000886123,
+  "catalog_size": 300,
+  "candidate_count": 100,
+  "user_mix": "80% existing positive histories, 20% new user",
+  "response_cache": "disabled; model/index arrays resident in RAM",
+  "measurement": "Open-loop planned arrival to HTTP completion; includes queueing",
+  "hardware": {
+    "cpu_count": 9,
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "python": "3.12.14"
+  },
+  "target_met": true,
+  "limitations": "Local host, short run, one API worker; no fleet-scale conclusion"
+}

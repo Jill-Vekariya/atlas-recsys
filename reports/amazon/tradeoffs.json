@@ -1,0 +1,82 @@
+{
+  "split": "validation",
+  "synthetic": false,
+  "ann_tradeoffs": [
+    {
+      "ef_search": 8,
+      "candidate_count": 20,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.6333333333333333,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 0.6787659998508389
+    },
+    {
+      "ef_search": 8,
+      "candidate_count": 100,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.43,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 0.761150499897667
+    },
+    {
+      "ef_search": 8,
+      "candidate_count": 200,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.30583333333333335,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 0.9763282499761772
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 20,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.9166666666666666,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 0.8695697499661037
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 100,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.7899999999999999,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.3632010001174422
+    },
+    {
+      "ef_search": 32,
+      "candidate_count": 200,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.6208333333333332,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 0.9997782498203378
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 20,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.9916666666666667,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.4135397500467661
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 100,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.9783333333333335,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.0674292502699245
+    },
+    {
+      "ef_search": 128,
+      "candidate_count": 200,
+      "queries": 6,
+      "ann_recall_vs_exact": 0.9250000000000002,
+      "ndcg_at_10": 0.0,
+      "sequential_p95_ms": 1.5807245001724368
+    }
+  ],
+  "history_weighting_ablation": {
+    "uniform": 0.0,
+    "weighted": 0.0
+  }
+}

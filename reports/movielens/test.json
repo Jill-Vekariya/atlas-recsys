@@ -1,0 +1,153 @@
+{
+  "source": "movielens",
+  "synthetic": false,
+  "split": "test",
+  "protocol": "Full fixed catalog snapshot; exclude all pre-cutoff rated items; macro average users",
+  "population": {
+    "eligible_users": 96,
+    "sampled_users": 96,
+    "prediction_cutoff": 1479542661
+  },
+  "results": {
+    "popularity": {
+      "recall_at_100": 0.1966111751301393,
+      "ndcg_at_10": 0.25980067974902027,
+      "precision_at_10": 0.22916666666666666,
+      "catalog_coverage_at_10": 0.007288031205091357,
+      "mean_recommended_train_popularity": 72.77464788732394,
+      "fallback_rate": 0.0,
+      "local_sequential_p95_ms": 1.2424542494500201,
+      "returning_users": 30,
+      "returning_ndcg_at_10": 0.11059614408174226,
+      "new_user_ndcg_at_10": 0.32762092323414665,
+      "controlled_cold_recall_at_100": 0.0,
+      "returning_controlled_cold_recall_at_100": 0.0,
+      "returning_cold_evaluation_users": 23,
+      "cold_evaluation_users": 87,
+      "head_recall_at_100": 0.4002774713107868,
+      "low_history_recall_at_100": 0.0,
+      "zero_history_recall_at_100": 0.0
+    },
+    "category_popularity": {
+      "recall_at_100": 0.17581929883393185,
+      "ndcg_at_10": 0.25656152475664146,
+      "precision_at_10": 0.23020833333333335,
+      "catalog_coverage_at_10": 0.01170190925887908,
+      "mean_recommended_train_popularity": 54.94736842105263,
+      "fallback_rate": 0.6875,
+      "local_sequential_p95_ms": 4.015234000235068,
+      "returning_users": 30,
+      "returning_ndcg_at_10": 0.10023084810613,
+      "new_user_ndcg_at_10": 0.32762092323414665,
+      "controlled_cold_recall_at_100": 0.0,
+      "returning_controlled_cold_recall_at_100": 0.0,
+      "returning_cold_evaluation_users": 23,
+      "cold_evaluation_users": 87,
+      "head_recall_at_100": 0.38565794839936757,
+      "low_history_recall_at_100": 0.0,
+      "zero_history_recall_at_100": 0.0
+    },
+    "als": {
+      "recall_at_100": 0.19016592727318615,
+      "ndcg_at_10": 0.24676435067044,
+      "precision_at_10": 0.22187500000000002,
+      "catalog_coverage_at_10": 0.01868199548347362,
+      "mean_recommended_train_popularity": 41.25824175824176,
+      "fallback_rate": 0.6875,
+      "local_sequential_p95_ms": 5.4624585002329695,
+      "returning_users": 30,
+      "returning_ndcg_at_10": 0.06887989103028551,
+      "new_user_ndcg_at_10": 0.32762092323414665,
+      "controlled_cold_recall_at_100": 0.0,
+      "returning_controlled_cold_recall_at_100": 0.0,
+      "returning_cold_evaluation_users": 23,
+      "cold_evaluation_users": 87,
+      "head_recall_at_100": 0.4000194241446878,
+      "low_history_recall_at_100": 0.0,
+      "zero_history_recall_at_100": 0.0
+    },
+    "content": {
+      "recall_at_100": 0.16846684130137626,
+      "ndcg_at_10": 0.22840436109701825,
+      "precision_at_10": 0.2041666666666667,
+      "catalog_coverage_at_10": 0.022685280229932252,
+      "mean_recommended_train_popularity": 7.51131221719457,
+      "fallback_rate": 0.6875,
+      "local_sequential_p95_ms": 9.788401500372856,
+      "returning_users": 30,
+      "returning_ndcg_at_10": 0.010127924395335905,
+      "new_user_ndcg_at_10": 0.32762092323414665,
+      "controlled_cold_recall_at_100": 0.006439728853521957,
+      "returning_controlled_cold_recall_at_100": 0.02435897435897436,
+      "returning_cold_evaluation_users": 23,
+      "cold_evaluation_users": 87,
+      "head_recall_at_100": 0.31790195820864636,
+      "low_history_recall_at_100": 0.0009578544061302681,
+      "zero_history_recall_at_100": 0.009475826944059785
+    },
+    "tower": {
+      "recall_at_100": 0.17489295590086193,
+      "ndcg_at_10": 0.2339608319666174,
+      "precision_at_10": 0.2104166666666667,
+      "catalog_coverage_at_10": 0.024327653459248613,
+      "mean_recommended_train_popularity": 7.90295358649789,
+      "fallback_rate": 0.6875,
+      "local_sequential_p95_ms": 2.400606999572119,
+      "returning_users": 30,
+      "returning_ndcg_at_10": 0.027908631178053204,
+      "new_user_ndcg_at_10": 0.32762092323414665,
+      "controlled_cold_recall_at_100": 0.016431062551752206,
+      "returning_controlled_cold_recall_at_100": 0.062152280087062695,
+      "returning_cold_evaluation_users": 23,
+      "cold_evaluation_users": 87,
+      "head_recall_at_100": 0.31968232256997975,
+      "low_history_recall_at_100": 0.0,
+      "zero_history_recall_at_100": 0.016291953873799125
+    },
+    "ranked": {
+      "recall_at_100": 0.1743525731983103,
+      "ndcg_at_10": 0.2321172524202908,
+      "precision_at_10": 0.2041666666666667,
+      "catalog_coverage_at_10": 0.024635598439745433,
+      "mean_recommended_train_popularity": 11.820833333333333,
+      "fallback_rate": 0.6875,
+      "local_sequential_p95_ms": 2.6761395004086808,
+      "returning_users": 30,
+      "returning_ndcg_at_10": 0.022009176629808017,
+      "new_user_ndcg_at_10": 0.32762092323414665,
+      "controlled_cold_recall_at_100": 0.01110883050538223,
+      "returning_controlled_cold_recall_at_100": 0.042020358868184955,
+      "returning_cold_evaluation_users": 23,
+      "cold_evaluation_users": 87,
+      "head_recall_at_100": 0.3208599977443563,
+      "low_history_recall_at_100": 0.0,
+      "zero_history_recall_at_100": 0.013865117529650176
+    }
+  },
+  "paired_comparisons": {
+    "ranked_minus_als": {
+      "mean_delta": -0.014647098250149216,
+      "ci95": [
+        -0.032401865865156074,
+        -0.0011531562181968215
+      ],
+      "unit": "absolute NDCG@10",
+      "resampling_unit": "user"
+    },
+    "tower_minus_content": {
+      "mean_delta": 0.005556470869599155,
+      "ci95": [
+        -0.0027512523530614117,
+        0.015437732100715496
+      ],
+      "unit": "absolute NDCG@10",
+      "resampling_unit": "user"
+    }
+  },
+  "limitations": [
+    "Review/rating preference proxy; no business uplift",
+    "Metadata snapshot is not historically reconstructed",
+    "Single seed; confidence intervals do not include training variance",
+    "Latency here is in-process and sequential, not an HTTP load test"
+  ]
+}

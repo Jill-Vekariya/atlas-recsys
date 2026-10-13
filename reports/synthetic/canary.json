@@ -1,0 +1,20 @@
+{
+  "traffic": "Synthetic local TestClient traffic; no online quality or business claim",
+  "injection": "Canary-only 25 ms delay and retrieval exception",
+  "guard": "Canary retrieval-failure rate exceeds primary by 0.2",
+  "observed": {
+    "primary": {
+      "requests": 20,
+      "p95_ms": 3.997901100410673,
+      "retrieval_failure_rate": 0.0
+    },
+    "canary": {
+      "requests": 20,
+      "p95_ms": 31.883260250106108,
+      "retrieval_failure_rate": 1.0
+    }
+  },
+  "rollback_triggered": true,
+  "post_rollback_slot": "primary",
+  "post_rollback_version": "synthetic-v1"
+}

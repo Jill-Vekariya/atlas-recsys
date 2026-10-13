@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "API readiness through reverse proxy",
+    "Streamlit readiness through reverse proxy",
+    "frontend HTML",
+    "Swagger routing and OpenAPI prefix",
+    "API authentication",
+    "recommendations through reverse proxy",
+    "feedback and retry idempotency through reverse proxy",
+    "Streamlit WebSocket upgrade through reverse proxy",
+    "container health command",
+    "graceful supervisor shutdown"
+  ],
+  "passed": true,
+  "environment": "Local Linux processes using the cloud entrypoint and checksum-verified Caddy 2.10.2; not Docker execution or public hosting",
+  "public_url": null
+}
