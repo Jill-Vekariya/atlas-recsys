@@ -13,11 +13,11 @@ import time
 import urllib.request
 from pathlib import Path
 
-from atlas.bundle import Bundle
-from atlas.registry import activate
-
 
 def main():
+    from atlas.bundle import Bundle
+    from atlas.registry import activate
+
     root = Path(__file__).resolve().parents[1]
     os.chdir(root)
     bundle = Path(os.getenv("ATLAS_DEMO_BUNDLE", "artifacts/synthetic-v1"))
