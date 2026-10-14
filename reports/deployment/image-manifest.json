@@ -2,8 +2,8 @@
   "tags": [
     "ghcr.io/jill-vekariya/atlas-recsys:main",
     "ghcr.io/jill-vekariya/atlas-recsys:latest",
-    "ghcr.io/jill-vekariya/atlas-recsys:sha-14c617fcff20368abe18b60374de8a0c152dbef0"
+    "ghcr.io/jill-vekariya/atlas-recsys:sha-ee7caedc549a5e23a83c181f0a049ad670ec087b"
   ],
-  "digest": "sha256:14bac4ab939c08dec791c7fa3d2201405714f961b8cdf554facdc8f1f1ef8209",
-  "source_commit": "14c617fcff20368abe18b60374de8a0c152dbef0"
+  "digest": "sha256:8ab4a6df5329e0e19100a0858e364a2546855752e384a7c60ed2036a1adbf93f",
+  "source_commit": "ee7caedc549a5e23a83c181f0a049ad670ec087b"
 }

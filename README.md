@@ -91,7 +91,7 @@ The configured Windows PC maps that port to **10080** instead.
 as public resume links. Use the GitHub Pages address for sharing. The older Cloudflare tunnel
 is optional and temporary; see [the no-card guide](docs/FREE_DEMO.md).
 
-**Verification:** 26 Python tests pass locally. Browser inference has five numerical/protocol
+**Verification:** 26 Python tests pass in GitHub Actions. Browser inference has five numerical/protocol
 tests and four real-browser interaction tests. The Pages deployment passed its independent
 browser checks. Docker/auth/feedback/WebSocket checks and real-data experiments are recorded
 in [the verification record](docs/VERIFICATION.md). Check the Actions badges for the latest commit.

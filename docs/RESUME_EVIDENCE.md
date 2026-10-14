@@ -3,13 +3,13 @@
 | Evidence | Status | Location |
 |---|---|---|
 | Source implementation | Complete | Repository source and scripts |
-| Python verification | Passed in GitHub Actions | 26 tests locally; latest Actions badge records remote checks |
+| Python verification | Passed in GitHub Actions | 26 tests plus lint/format; Python/Docker CI `38520865560` |
 | Real-data evaluation | Recorded | Amazon and MovieLens JSON reports |
 | Local HTTP benchmark | Recorded | `reports/movielens/http_load.json` |
 | Cloud entrypoint application check | Passed locally | `reports/synthetic/cloud_startup.json` |
 | Local Docker deployment | Passed | `reports/synthetic/docker_startup.json`; PC demo at http://localhost:10080 |
 | Public GitHub repository | Published | https://github.com/Jill-Vekariya/atlas-recsys |
-| Docker CI run | Passed | https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465119077 |
+| Docker CI run | Passed | https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38520865560 |
 | Published Docker image | Published and anonymously accessible | `ghcr.io/jill-vekariya/atlas-recsys:latest`; digest in `reports/deployment/image-manifest.json` |
 | Permanent browser lab | Deployed with model/UI gates | https://jill-vekariya.github.io/atlas-recsys/ |
 | Live Render demo | Blocked by Render account requirement | Authenticated free-plan creation returned HTTP 402; no public URL yet |

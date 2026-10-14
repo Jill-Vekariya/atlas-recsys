@@ -6,7 +6,7 @@ recorded on 13 October 2026; Docker used CPython 3.12.15 in Linux containers.
 | Check | Status | Evidence |
 |---|---|---|
 | Clean dependency installation | Passed | `uv sync --frozen --extra dev` completed |
-| Unit/integration tests | Passed | 26 tests locally, including ALS no-signal cold onboarding; temporal history, cold withholding, loss, export parity, API, feedback, concurrency, routing, serving-import isolation, public-check credential isolation; [CI evidence](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38468949550) |
+| Unit/integration tests | Passed | 26 tests in GitHub Actions, including ALS no-signal cold onboarding; temporal history, cold withholding, loss, export parity, API, feedback, concurrency, routing, serving-import isolation, public-check credential isolation; [CI evidence](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38468949550) |
 | Ruff lint and formatting | Passed | Source, scripts, and tests checked |
 | Synthetic end-to-end training | Passed | `reports/synthetic/*.json` |
 | Amazon data preparation/training/evaluation | Passed | `reports/amazon/*.json` |
@@ -46,5 +46,12 @@ or public workload latency is claimed. No hosting payment or card entry was perf
 - Five model/protocol tests compare 16 Python reference profiles across 300 items (4,800 candidate calculations).
 - Four Chrome/Chromium UI tests cover all modes, cold onboarding, feedback persistence, filters, evidence, and mobile layout.
 - Exported LightGBM predictions match the saved Python reference; floating-point vector comparisons use explicit tolerances.
-- The initial backend commit failed CI formatting on one line. Formatting was corrected; the latest badge is authoritative for current CI.
+- The initial backend commit failed CI formatting on one line. The correction passed [Python/Docker CI 38520865560](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38520865560).
 - The demo uses synthetic profiles; evidence reports separately retain real Amazon/MovieLens evaluation.
+
+The corrected Pages deployment [38520865593](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38520865593) passed all numerical and browser gates.
+The image publication [38521025493](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38521025493) passed tests and a live container smoke check before pushing.
+An independent browser confirmed the deployed lab's profile selection, cold onboarding/content fallback,
+feedback exclusion, ranking/held-out filtering, evidence, and provenance.
+The Windows deployed-site Playwright attempt encountered `ERR_NETWORK_ACCESS_DENIED`; this is not
+recorded as a passing test. Local Windows UI tests and hosted GitHub Chromium tests passed.

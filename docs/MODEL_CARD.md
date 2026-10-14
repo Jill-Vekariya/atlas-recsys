@@ -38,7 +38,9 @@ Candidate groups with no relevant retrieved item are excluded from ranker fittin
 ## Selection and use
 
 Validation macro NDCG@10 chooses the serving `auto` algorithm. Test data do not select it.
-Explicit API modes expose all algorithms for debugging. Use the synthetic bundle for the
+Explicit API modes expose all algorithms for debugging. ALS profiles with a near-zero folded
+query use recency-weighted content similarity and report `als_no_signal` as the fallback reason.
+This handles onboarding seeds with no collaborative training signal. Use the synthetic bundle for the
 public demonstration; use real-data bundles locally for research comparisons.
 
 ## Known weaknesses
@@ -59,3 +61,10 @@ Bundles verify asset SHA256 values, feature order, array dimensions, index count
 feature count. These checks detect corruption and mismatched components. They do not verify
 the author or make untrusted pickle/joblib transforms safe. Serve only trusted, locally built
 bundles. Activation validates first and swaps the routing file atomically.
+
+## Public browser export
+
+The Pages lab exports only the synthetic bundle and executes the learned projection, exact
+retrieval, ALS fold-in, features, and LightGBM trees in JavaScript. Python reference fixtures
+check numerical parity. Browser feedback stays local and does not retrain weights. See
+[GITHUB_PAGES.md](GITHUB_PAGES.md) for reproduction and differences from the FAISS backend.
