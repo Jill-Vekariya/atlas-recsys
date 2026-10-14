@@ -108,6 +108,18 @@ function renderEvidence() {
   $("quality-chart").innerHTML = entries.map(([name,r]) => `<div class="bar-row ${r.ndcg_at_10 === max ? "best" : ""}"><span>${esc(names[name])}</span><div class="bar-track"><div class="bar-fill" style="width:${r.ndcg_at_10 / max * 100}%"></div></div><span class="bar-value">${r.ndcg_at_10.toFixed(4)}</span></div>`).join("");
   $("quality-table").innerHTML = entries.map(([name,r]) => `<tr class="${r.ndcg_at_10 === max ? "best" : ""}"><td>${esc(names[name])}</td><td>${r.recall_at_100.toFixed(4)}</td><td>${r.ndcg_at_10.toFixed(4)}</td><td>${(r.catalog_coverage_at_10*100).toFixed(2)}%</td><td>${r.controlled_cold_recall_at_100.toFixed(4)}</td></tr>`).join("");
   $("finding").innerHTML = $("dataset").value === "movielens" ? `<strong>The popularity baseline won overall test NDCG@10.</strong> The two-tower model reached some controlled cold items, but that did not establish an overall ranking improvement. This is a measured tradeoff, not an assumed win for a more complex model.` : `<strong>This Amazon sample is too sparse for a strong personalization conclusion.</strong> The full reports retain label sparsity, ranker-training counts, and model comparisons. Treat this as a protocol and engineering experiment, not evidence of business lift.`;
+  const selection = data.selection;
+  if (selection) {
+    const chosen = names[selection.validation_selected] || selection.validation_selected;
+    const difference = selection.selected_minus_popularity_test_ndcg;
+    $("selection-summary").textContent = `Validation chose ${chosen} from ${selection.validation_users} users. On ${selection.test_users} held-out test users, its NDCG@10 differed from popularity by ${difference >= 0 ? "+" : ""}${difference.toFixed(4)}. This is a descriptive outcome, not a new selection or a significance claim.`;
+    $("cohort-warning").textContent = `Evaluation cohorts: ${selection.test_returning_users} returning users; ${selection.test_cold_target_users} users with controlled cold-item targets. Small cohorts and the single-seed protocol limit conclusions.`;
+    $("tradeoff-table").innerHTML = Object.entries(selection.validation_metrics).map(([name, m]) => `<tr><td>${esc(names[name] || name)}</td><td>${m.ndcg_at_10.toFixed(4)}</td><td>${m.sequential_p95_ms == null ? "unavailable" : m.sequential_p95_ms.toFixed(2)}</td><td>${name === selection.validation_selected ? "Validation selected" : "—"}</td></tr>`).join("");
+    $("tradeoff-limits").textContent = selection.limitations;
+  } else {
+    $("selection-summary").textContent = "Selection evidence unavailable for this report.";
+    $("tradeoff-table").textContent = "";
+  }
   const load = evidence.http_load;
   $("benchmark-context").textContent = `${load.requests} measured requests over ${load.requested_duration_seconds} seconds; ${load.catalog_size.toLocaleString()} MovieLens items; ${load.user_mix}. Local CPU host, one API worker. These are not GitHub Pages latency measurements.`;
   $("benchmark-stats").innerHTML = `<div><strong>${load.p95_ms.toFixed(1)}<small> ms</small></strong><span>local HTTP p95</span></div><div><strong>${load.achieved_rps.toFixed(1)}</strong><span>achieved requests/sec</span></div><div><strong>${(load.error_rate*100).toFixed(0)}%</strong><span>error rate</span></div>`;

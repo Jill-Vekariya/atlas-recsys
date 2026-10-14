@@ -16,6 +16,11 @@ or business uplift.
 Read [measured results](docs/RESULTS.md), [the interview guide](docs/INTERVIEW_GUIDE.md),
 [deployment instructions](docs/DEPLOYMENT.md), and [ownership exercises](docs/OWNERSHIP.md).
 
+**Engineering case study:** [Why our validation-selected model lost to popularity on the final test](docs/MODEL_SELECTION_CASE_STUDY.md).
+Reproduce the validation-only selection decision from recorded reports with
+`uv run python scripts/model_selection_audit.py --report-dir reports/movielens`.
+The result is a documented generalization failure, not an invented uplift claim.
+
 **[Open the live recommendation lab](https://jill-vekariya.github.io/atlas-recsys/)** ·
 [Source](https://github.com/Jill-Vekariya/atlas-recsys) · [Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys)
 
