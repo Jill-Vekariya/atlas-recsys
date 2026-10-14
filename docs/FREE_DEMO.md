@@ -1,13 +1,26 @@
 # Free demonstration without a card
 
+## Permanent public lab
+
+Open https://jill-vekariya.github.io/atlas-recsys/. This is the primary resume/demo link.
+GitHub Pages serves the trained browser model, catalog, ranking engine, and evidence. It keeps
+working independently of the configured PC. No account, card, API key, or proxy is required
+to use it. See [the architecture and reproduction guide](GITHUB_PAGES.md).
+
+The public lab computes recommendations in the browser and saves feedback locally. It does
+not host FastAPI, FAISS, monitoring, or shared feedback. Launch the Docker image to exercise
+those backend features.
+
+## Optional PC-hosted Docker demonstration
+
+
 The configured Windows PC runs the complete Docker application. A Cloudflare Quick Tunnel
 shares it over HTTPS without a Cloudflare account, a purchased domain, or card details.
 This preserves the actual FastAPI, FAISS, LightGBM, Streamlit, and model-bundle implementation.
 
-The current public URL is recorded in `reports/public_demo/deployment.json`. It is temporary:
+The historical public URL is recorded in `reports/public_demo/deployment.json`. It is temporary:
 the PC, Docker Desktop, the application container, and the tunnel must stay running. Restarting
-the tunnel creates a new hostname. Use the permanent GitHub repository link on a resume, and
-open the demonstration before an interview.
+the tunnel creates a new hostname. Use the permanent GitHub Pages and repository links on a resume. Check a tunnel before sharing it.
 
 The configured containers are `atlas-recsys-demo` and `atlas-recsys-public-tunnel`. They communicate
 on the dedicated `atlas-recsys-demo-network` Docker network. The tunnel exposes only the Atlas

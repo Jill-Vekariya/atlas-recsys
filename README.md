@@ -16,9 +16,18 @@ or business uplift.
 Read [measured results](docs/RESULTS.md), [the interview guide](docs/INTERVIEW_GUIDE.md),
 [deployment instructions](docs/DEPLOYMENT.md), and [ownership exercises](docs/OWNERSHIP.md).
 
-[Open the public demonstration](https://cotton-gender-pts-metric.trycloudflare.com).
-This free HTTPS link shares the Docker app from the configured PC. It is temporary and needs
-the PC and Docker running; see [the no-card operating guide](docs/FREE_DEMO.md).
+**[Open the live recommendation lab](https://jill-vekariya.github.io/atlas-recsys/)** ·
+[Source](https://github.com/Jill-Vekariya/atlas-recsys) · [Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys)
+
+[![Atlas recommendation lab](docs/images/atlas-demo.png)](https://jill-vekariya.github.io/atlas-recsys/)
+
+The GitHub Pages demo runs exported trained models directly in your browser. It needs no
+sign-in, API key, running PC, card, or backend. Compare seven modes, try new-user preferences,
+inspect ranking signals, and explore the real-data evidence. The interactive catalog is
+synthetic; likes and skips stay in your browser. [How browser inference works](docs/GITHUB_PAGES.md).
+
+The full Python/Docker platform includes FastAPI, FAISS, persistent feedback, monitoring, and
+rollback. These server features run when you launch Docker; GitHub Pages hosts the browser lab.
 
 The included numeric reports cover **real Amazon Reviews 2023 and MovieLens data**, plus a
 separately labeled synthetic fixture. The release includes a small synthetic demo bundle.
@@ -30,6 +39,7 @@ Install Python 3.12 and uv, then run from this directory:
 
 ```bash
 uv sync --frozen --extra dev
+uv run atlas smoke --config configs/smoke.yaml
 uv run atlas activate --bundle artifacts/synthetic-v1
 uv run atlas serve
 ```
@@ -42,12 +52,7 @@ uv run streamlit run src/atlas/ui.py --browser.gatherUsageStats=false
 
 Open http://127.0.0.1:8501 for the lab and http://127.0.0.1:8000/docs for the API.
 
-When cloning from GitHub, generated bundles are intentionally absent. Run this once before
-activating/serving:
-
-```bash
-uv run atlas smoke --config configs/smoke.yaml
-```
+The smoke command creates the synthetic bundle omitted from Git. Run it once on a fresh clone.
 
 Existing bundles are immutable. To rerun a model experiment, copy a config and change its
 `bundle_dir` and `report_dir` rather than overwriting a completed bundle.
@@ -71,21 +76,25 @@ docker build --target cloud -t atlas:cloud .
 docker run --rm -p 127.0.0.1:10000:10000 -e ATLAS_EPHEMERAL=true atlas:cloud
 ```
 
-Open http://127.0.0.1:10000. [Render deployment](docs/RENDER_DEPLOYMENT.md) uses `render.yaml`,
-an automatically generated API key, and CI-gated updates. Local Compose uses the separate
-`training` target and persistent volumes. A Render free service's feedback is temporary.
+Open http://127.0.0.1:10000 for the lab and http://127.0.0.1:10000/api/docs for API documentation.
+Local Compose uses separate ports; the single-container image uses the one mapped port.
+The configured Windows PC maps that port to **10080** instead.
 
-**Verification status:** Python tests, lint/format checks, real-data experiments, and local HTTP/UI
-checks pass. The cloud Docker image also built and ran on Docker Desktop; authentication,
-recommendations, feedback retries, metrics, and WebSocket checks passed. Feedback survived
-container replacement using a dedicated volume. See [the verification record](docs/VERIFICATION.md).
+| Launch mode | Lab | API documentation |
+|---|---|---|
+| Public browser demo | https://jill-vekariya.github.io/atlas-recsys/ | Browser inference; no hosted Python API |
+| Python or local Compose | http://127.0.0.1:8501 | http://127.0.0.1:8000/docs |
+| Docker command above | http://127.0.0.1:10000 | http://127.0.0.1:10000/api/docs |
+| Configured Windows PC | http://localhost:10080 | http://localhost:10080/api/docs |
 
-[GitHub's Python and Docker checks passed](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38465119077).
-The configured PC demo runs at http://localhost:10080; this address is local to that PC.
-The public Docker demonstration is verified through Cloudflare Quick Tunnel, including
-readiness, frontend HTML, documentation, authentication rejection, and WebSockets. Public checks
-transmit no API key; authenticated functional checks passed locally. Its temporary address is
-recorded in [the public check report](reports/public_demo/deployment.json).
+`localhost` and `127.0.0.1` always refer to the computer opening the link. They cannot be used
+as public resume links. Use the GitHub Pages address for sharing. The older Cloudflare tunnel
+is optional and temporary; see [the no-card guide](docs/FREE_DEMO.md).
+
+**Verification:** 26 Python tests pass locally. Browser inference has five numerical/protocol
+tests and four real-browser interaction tests. The Pages deployment passed its independent
+browser checks. Docker/auth/feedback/WebSocket checks and real-data experiments are recorded
+in [the verification record](docs/VERIFICATION.md). Check the Actions badges for the latest commit.
 
 [Published Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys):
 
@@ -189,7 +198,8 @@ automatically retrain a model or turn clicks into purchase labels. See the data 
 
 Use `scripts/publish_github.sh` for a new fork after authenticating GitHub CLI and configuring your own Git
 author identity. It defaults to a private repository. Set `ATLAS_VISIBILITY=public` to deliberately
-publish publicly. CI checks Python behavior and a Docker Compose startup. A separate workflow
+publish publicly. CI checks Python behavior and a Docker Compose startup. The Pages workflow checks numerical parity
+and browser interactions before publishing the lab. A separate workflow
 publishes the container to GHCR when manually invoked or when a version tag is pushed.
 
 ## Architecture

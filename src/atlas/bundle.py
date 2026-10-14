@@ -107,7 +107,9 @@ class Bundle:
             if float(np.linalg.norm(q)) < 1e-9:
                 # Content remains informative when every onboarding seed has zero ALS factors.
                 q = l2_normalize(
-                    context(history, self.content, self.config["history_size"], recency).reshape(1, -1)
+                    context(history, self.content, self.config["history_size"], recency).reshape(
+                        1, -1
+                    )
                 )[0]
                 scores = self.content @ q
                 reason = "als_no_signal"

@@ -6,7 +6,7 @@ recorded on 13 October 2026; Docker used CPython 3.12.15 in Linux containers.
 | Check | Status | Evidence |
 |---|---|---|
 | Clean dependency installation | Passed | `uv sync --frozen --extra dev` completed |
-| Unit/integration tests | Passed | 25 tests; temporal history, cold withholding, loss, export parity, API, feedback, concurrency, routing, serving-import isolation, public-check credential isolation; [CI evidence](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38468949550) |
+| Unit/integration tests | Passed | 26 tests locally, including ALS no-signal cold onboarding; temporal history, cold withholding, loss, export parity, API, feedback, concurrency, routing, serving-import isolation, public-check credential isolation; [CI evidence](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38468949550) |
 | Ruff lint and formatting | Passed | Source, scripts, and tests checked |
 | Synthetic end-to-end training | Passed | `reports/synthetic/*.json` |
 | Amazon data preparation/training/evaluation | Passed | `reports/amazon/*.json` |
@@ -36,6 +36,15 @@ the TestClient adapter when upgrading those packages.
 The repository does not claim every advanced model beats the baseline. See RESULTS.md for
 the failed ranker comparison and small cold-cohort benefit.
 
-The public demonstration is self-hosted on the configured PC through a temporary tunnel. It
-depends on the PC, Docker, application, and tunnel remaining online. No managed-cloud availability
+The primary public demonstration is the GitHub Pages browser lab and does not depend on the PC.
+The optional full Docker tunnel depends on the PC, Docker, application, and tunnel remaining online. No managed-cloud availability
 or public workload latency is claimed. No hosting payment or card entry was performed.
+
+## Browser deployment (13–14 October 2026)
+
+- GitHub Pages deployment [38474619205](https://github.com/Jill-Vekariya/atlas-recsys/actions/runs/38474619205) passed.
+- Five model/protocol tests compare 16 Python reference profiles across 300 items (4,800 candidate calculations).
+- Four Chrome/Chromium UI tests cover all modes, cold onboarding, feedback persistence, filters, evidence, and mobile layout.
+- Exported LightGBM predictions match the saved Python reference; floating-point vector comparisons use explicit tolerances.
+- The initial backend commit failed CI formatting on one line. Formatting was corrected; the latest badge is authoritative for current CI.
+- The demo uses synthetic profiles; evidence reports separately retain real Amazon/MovieLens evaluation.
