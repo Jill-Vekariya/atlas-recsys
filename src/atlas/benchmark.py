@@ -47,8 +47,13 @@ async def load_test(url, bundle_path, output, rate=50, duration=10, concurrency=
         async def one(i):
             arrival = start + i / rate
             await asyncio.sleep(max(0, arrival - time.perf_counter()))
+            awakened = time.perf_counter()
             async with semaphore:
                 dispatched = time.perf_counter()
+                timing_breakdown = {
+                    "wakeup_lag_ms": max(0.0, (awakened - arrival) * 1000),
+                    "semaphore_wait_ms": max(0.0, (dispatched - awakened) * 1000),
+                }
                 try:
                     response = await client.post(
                         "/recommend",
@@ -59,13 +64,16 @@ async def load_test(url, bundle_path, output, rate=50, duration=10, concurrency=
                             "candidate_count": 100,
                         },
                     )
-                    elapsed = time.perf_counter() - arrival
+                    completed = time.perf_counter()
+                    elapsed = completed - arrival
                     body = response.json() if response.status_code == 200 else {}
                     records.append(
                         {
                             "latency_ms": elapsed * 1000,
                             "status": response.status_code,
                             "dispatch_lag_ms": (dispatched - arrival) * 1000,
+                            "client_request_ms": (completed - dispatched) * 1000,
+                            **timing_breakdown,
                             "fallback": body.get("fallback"),
                             "slot": body.get("experiment_slot"),
                             "processing_ms": body.get("processing_ms"),
@@ -101,6 +109,19 @@ async def load_test(url, bundle_path, output, rate=50, duration=10, concurrency=
         "error_rate": 1 - len(successful) / max(1, len(records)),
         "fallback_rate": sum(bool(r["fallback"]) for r in successful) / max(1, len(successful)),
         "p95_dispatch_lag_ms": float(np.quantile([r["dispatch_lag_ms"] for r in records], 0.95)),
+        "p95_client_request_ms": float(
+            np.quantile([r["client_request_ms"] for r in successful], 0.95)
+        )
+        if successful
+        else None,
+        "p95_server_processing_ms": float(
+            np.quantile(
+                [r["processing_ms"] for r in successful if r.get("processing_ms") is not None], 0.95
+            )
+        )
+        if any(r.get("processing_ms") is not None for r in successful)
+        else None,
+        "load_generator_schedule_overrun_seconds": max(0.0, wall - duration),
         "catalog_size": len(bundle.items),
         "candidate_count": 100,
         "user_mix": "80% existing positive histories, 20% new user",

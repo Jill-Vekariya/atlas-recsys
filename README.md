@@ -21,6 +21,13 @@ Reproduce the validation-only selection decision from recorded reports with
 `uv run python scripts/model_selection_audit.py --report-dir reports/movielens`.
 The result is a documented generalization failure, not an invented uplift claim.
 
+**Final engineering review:** [Measured latency limits, evaluation cohorts and reproducibility](docs/FINAL_ENGINEERING_VERIFICATION.md).
+On the current Windows host, the synthetic bundle passed 5 RPS (~57 ms p95) but **did not meet**
+the 50 RPS / 150 ms target (measured ~15.7 s p95 with severe dispatch delay). These are
+machine/workload-specific diagnostics, not a production SLA. Use
+`uv run python scripts/cohort_evidence.py --report reports/movielens/validation.json`
+to inspect recorded cohort evidence; this does not retrain models.
+
 **[Open the live recommendation lab](https://jill-vekariya.github.io/atlas-recsys/)** ·
 [Source](https://github.com/Jill-Vekariya/atlas-recsys) · [Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys)
 
@@ -96,8 +103,9 @@ The configured Windows PC maps that port to **10080** instead.
 as public resume links. Use the GitHub Pages address for sharing. The older Cloudflare tunnel
 is optional and temporary; see [the no-card guide](docs/FREE_DEMO.md).
 
-**Verification:** 26 Python tests pass in GitHub Actions. Browser inference has five numerical/protocol
-tests and four real-browser interaction tests. The Pages deployment passed its independent
+**Verification:** The baseline CI passed 35 Python tests after the model-selection updates; the final
+verification change requires a fresh CI run before those results can be claimed for its commit.
+Browser inference has five numerical/protocol tests and four real-browser interaction tests. The Pages deployment passed its independent
 browser checks. Docker/auth/feedback/WebSocket checks and real-data experiments are recorded
 in [the verification record](docs/VERIFICATION.md). Check the Actions badges for the latest commit.
 

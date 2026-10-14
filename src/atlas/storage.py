@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+from contextlib import contextmanager
 import sqlite3
 import time
 from pathlib import Path
@@ -15,7 +16,7 @@ class Store:
     def __init__(self, path):
         self.path = str(path)
         Path(self.path).parent.mkdir(parents=True, exist_ok=True)
-        with self.connect() as c:
+        with self.transaction() as c:
             c.execute("PRAGMA journal_mode=WAL")
             c.executescript("""
                 CREATE TABLE IF NOT EXISTS exposures (
@@ -33,8 +34,18 @@ class Store:
         c.execute("PRAGMA foreign_keys=ON")
         return c
 
+    @contextmanager
+    def transaction(self):
+        """Commit or roll back, then close SQLite handles deterministically."""
+        connection = self.connect()
+        try:
+            with connection:
+                yield connection
+        finally:
+            connection.close()
+
     def exposure(self, request_id, user_id, source, version, slot, items):
-        with self.connect() as c:
+        with self.transaction() as c:
             c.execute(
                 "INSERT INTO exposures VALUES (?,?,?,?,?,?,?)",
                 (
@@ -50,7 +61,7 @@ class Store:
 
     def feedback(self, data):
         canonical = json.dumps(data, sort_keys=True)
-        with self.connect() as c:
+        with self.transaction() as c:
             c.execute("BEGIN IMMEDIATE")
             existing = c.execute(
                 "SELECT payload FROM feedback WHERE event_id=?", (data["event_id"],)
@@ -73,7 +84,7 @@ class Store:
             return True
 
     def export(self, target):
-        with self.connect() as c:
+        with self.transaction() as c:
             rows = c.execute(
                 "SELECT e.user_key,e.source,e.version,e.experiment,f.payload,f.created "
                 "FROM feedback f JOIN exposures e USING(request_id) "
