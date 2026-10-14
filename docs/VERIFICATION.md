@@ -55,3 +55,16 @@ An independent browser confirmed the deployed lab's profile selection, cold onbo
 feedback exclusion, ranking/held-out filtering, evidence, and provenance.
 The Windows deployed-site Playwright attempt encountered `ERR_NETWORK_ACCESS_DENIED`; this is not
 recorded as a passing test. Local Windows UI tests and hosted GitHub Chromium tests passed.
+
+## Configured PC update (14 October 2026)
+
+The PC now runs the corrected serving code in `atlas-recsys:serving-fix`. Slow registry downloads
+and a failed package download prevented a fresh full local build. The installed image reuses
+the existing dependency image and replaces the two changed serving modules from the CI-tested
+source. It is a separately identified local image, not the GHCR publication digest.
+
+The replacement passed authenticated local API/UI/docs/feedback/metrics/WebSocket checks and
+a live ALS cold-onboarding regression. Reports: `reports/deployment/docker-update.json` and
+`docker-cold-onboarding.json`. The named feedback volume was retained. The previous container
+is stopped as `atlas-recsys-demo-before-20261014` for rollback. The public GHCR image separately
+passed GitHub build/smoke/publication checks and is pinned in `image-manifest.json`.

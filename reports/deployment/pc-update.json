@@ -1,0 +1,12 @@
+{
+    "published_image_digest":  "sha256:8ab4a6df5329e0e19100a0858e364a2546855752e384a7c60ed2036a1adbf93f",
+    "local_image":  "atlas-recsys:serving-fix",
+    "method":  "Existing dependency image with two CI-tested serving modules replaced; distinct local image",
+    "volume":  "atlas-recsys-demo-data",
+    "app_check":  "reports/deployment/docker-update.json",
+    "source_commit":  "ee7caedc549a5e23a83c181f0a049ad670ec087b",
+    "local_image_id":  "sha256:67b15740091a4f0d4e8b15b8be94e8c74d9a8f821ae833e6993c61609adc0925",
+    "rollback_container":  "atlas-recsys-demo-before-20261014",
+    "cold_check":  "reports/deployment/docker-cold-onboarding.json",
+    "checked_at_utc":  "2026-10-14T06:30:25.1689571Z"
+}

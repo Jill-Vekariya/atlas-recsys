@@ -1,0 +1,18 @@
+{
+  "checked_at_utc": "2026-10-14T06:27:45.758284+00:00",
+  "base_url": "http://127.0.0.1:10000",
+  "passed": true,
+  "synthetic": true,
+  "model_version": "synthetic-v1",
+  "checks": [
+    "API readiness",
+    "Streamlit readiness and frontend HTML",
+    "Swagger and OpenAPI routing",
+    "Unauthenticated API rejection",
+    "New-user recommendations and fallback",
+    "Demo feedback and retry idempotency",
+    "Authenticated monitoring",
+    "Streamlit WebSocket upgrade"
+  ],
+  "limitations": "Application smoke checks, not a load test or real-user quality experiment"
+}
