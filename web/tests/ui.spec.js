@@ -49,7 +49,11 @@ test("category, held-out filtering, evidence, and provenance views work", async 
   await page.getByRole("button", {name:"Evidence",exact:true}).click();
   await expect(page.locator("#quality-table tr")).toHaveCount(6);
   await expect(page.locator("#finding")).toContainText("popularity baseline won");
+  await expect(page.locator("#selection-summary")).toContainText("Validation chose Two-tower");
+  await expect(page.locator("#tradeoff-table tr")).toHaveCount(6);
+  await expect(page.locator("#cohort-warning")).toContainText("30 returning users");
   await page.locator("#dataset").selectOption("amazon");
+  await expect(page.locator("#selection-summary")).toContainText("Validation chose Popularity");
   await expect(page.locator("#finding")).toContainText("too sparse");
   await page.getByRole("button", {name:"System",exact:true}).click();
   await expect(page.locator("#provenance")).toContainText("synthetic-v1");

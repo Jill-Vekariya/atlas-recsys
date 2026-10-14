@@ -29,6 +29,56 @@ def write_json(path, value):
     path.write_text(json.dumps(value, separators=(",", ":"), allow_nan=False) + "\n")
 
 
+def selection_evidence(validation: dict, test: dict, dataset: str) -> dict:
+    """Expose the validation decision and held-out outcome without test-based selection."""
+    if validation.get("split") != "validation" or test.get("split") != "test":
+        raise ValueError("Expected chronological validation and test reports")
+    if any(
+        r.get("source") != dataset or r.get("synthetic") is not False for r in (validation, test)
+    ):
+        raise ValueError("Only matching real-data evaluation reports may be published")
+    if validation.get("population", {}).get("prediction_cutoff", 0) >= test.get(
+        "population", {}
+    ).get("prediction_cutoff", 0):
+        raise ValueError("Validation must precede test")
+    vr, tr = validation["results"], test["results"]
+    if set(vr) != set(tr) or not vr:
+        raise ValueError("Validation/test algorithms must match")
+    eligible = {
+        name: row["ndcg_at_10"] for name, row in vr.items() if row.get("ndcg_at_10") is not None
+    }
+    if not eligible:
+        raise ValueError("No eligible validation result")
+    winner = max(eligible, key=eligible.get)
+    recorded = validation.get("selected_algorithm")
+    if recorded is not None and recorded != winner:
+        raise ValueError("Recorded selection disagrees with validation result")
+    baseline = tr["popularity"]["ndcg_at_10"]
+    outcome = tr[winner]["ndcg_at_10"]
+    return {
+        "validation_selected": winner,
+        "validation_users": validation["population"]["sampled_users"],
+        "test_users": test["population"]["sampled_users"],
+        "test_returning_users": tr["popularity"]["returning_users"],
+        "test_cold_target_users": tr["popularity"]["cold_evaluation_users"],
+        "selected_test_ndcg_at_10": outcome,
+        "popularity_test_ndcg_at_10": baseline,
+        "selected_minus_popularity_test_ndcg": outcome - baseline,
+        "validation_metrics": {
+            name: {
+                "ndcg_at_10": row["ndcg_at_10"],
+                "sequential_p95_ms": row["local_sequential_p95_ms"],
+            }
+            for name, row in vr.items()
+        },
+        "limitations": (
+            "Only validation metrics may select a configuration. Sequential in-process "
+            "p95 is not HTTP latency, not paired with throughput, and not a production SLA. "
+            "Data use a later catalog snapshot; results are single-seed."
+        ),
+    }
+
+
 def export(bundle_path, output, reports):
     bundle = Bundle(bundle_path)
     if bundle.manifest["dataset"].get("synthetic") is not True:
@@ -83,14 +133,18 @@ def export(bundle_path, output, reports):
     write_json(output / "tests" / "parity.json", {"fixtures": fixtures})
     evidence = {}
     for dataset in ["movielens", "amazon"]:
+        validation = json.loads((reports / dataset / "validation.json").read_text())
         test = json.loads((reports / dataset / "test.json").read_text())
         manifest = json.loads((reports / dataset / "data_manifest.json").read_text())
+        if manifest.get("source") != dataset:
+            raise ValueError("Dataset manifest does not match evaluation")
         evidence[dataset] = {
             "source": dataset,
             "synthetic": test["synthetic"],
             "population": test["population"],
             "catalog_size": manifest["items"],
             "results": test["results"],
+            "selection": selection_evidence(validation, test, dataset),
         }
     evidence["http_load"] = json.loads((reports / "movielens" / "http_load.json").read_text())
     write_json(output / "evidence.json", evidence)
