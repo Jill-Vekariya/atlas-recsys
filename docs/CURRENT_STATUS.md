@@ -13,3 +13,5 @@ The validation-selected MovieLens model lost to popularity on final test. The re
 The old PC-hosted temporary tunnel is historical and was unavailable in the audit. Use the permanent Pages URL from the README. Recorded test counts and timings retain their original revisions and workloads. [Ownership exercises](OWNERSHIP.md) are unfinished until actually completed by the owner.
 
 Code uses [MIT](../LICENSE); the unchanged dataset-rights explanation is in [NOTICE](../NOTICE.md). No new license for external data is granted.
+
+[Cleanup changes and local verification](CLEANUP_VERIFICATION.md).
