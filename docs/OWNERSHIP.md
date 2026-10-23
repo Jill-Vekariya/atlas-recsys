@@ -4,6 +4,16 @@ The implementation and documentation are a starting point. You become interview-
 reproducing results, modifying behavior, checking consequences, and explaining the decisions
 without relying on a script. The checklist below is not marked completed on your behalf.
 
+## Actual contribution record
+
+Implementation and documentation used AI assistance. Independent personal coding, review and experiment reproduction have not been recorded in this log. The exercises below remain proposals.
+
+| Date | Actual contribution | Commit or output | What I can explain independently |
+|---|---|---|---|
+| — | No completed personal contribution recorded here | — | — |
+
+Update the table only after doing the work. Passing automated checks does not complete an ownership exercise.
+
 ## First: reproduce
 
 - Install from the lockfile in a clean environment.

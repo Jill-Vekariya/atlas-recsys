@@ -1,5 +1,7 @@
 # Atlas — Cold-Start Recommendation Under a Strict Latency Budget
 
+[Current status and remaining work](docs/CURRENT_STATUS.md) · [Interview practice](docs/INTERVIEW_PRACTICE.md)
+
 [![checks](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml/badge.svg)](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml)
 
 Atlas is an end-to-end recommendation engineering project: PyTorch retrieval, FAISS indexing,
@@ -10,6 +12,8 @@ The experiment asks how item content affects recommendations for products withou
 interactions, and what serving cost that improvement introduces. It keeps failed experiments
 and strong baselines visible. This repository does not establish production-scale performance
 or business uplift.
+
+This project was implemented and documented with AI assistance; personal contributions are recorded only when supported by the [ownership log](docs/OWNERSHIP.md).
 
 ## Start here
 
@@ -232,6 +236,10 @@ flowchart TD
     A --> F["Exposure and feedback store"]
     A --> M["Metrics and canary guard"]
 ```
+
+## License
+
+Code and documentation use the [MIT license](LICENSE); external data keeps its own [terms](NOTICE.md).
 
 ## Practical limits
 
