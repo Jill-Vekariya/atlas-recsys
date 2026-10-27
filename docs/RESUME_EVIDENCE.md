@@ -1,5 +1,7 @@
 # Portfolio evidence record
 
+This table preserves historical execution evidence. For the supported demonstration, current limitations and new verification, start with [current status](CURRENT_STATUS.md). Historical test counts and host-specific timings are not current-head guarantees.
+
 | Evidence | Status | Location |
 |---|---|---|
 | Source implementation | Complete | Repository source and scripts |
@@ -13,7 +15,7 @@
 | Published Docker image | Published and anonymously accessible | `ghcr.io/jill-vekariya/atlas-recsys:latest`; digest in `reports/deployment/image-manifest.json` |
 | Permanent browser lab | Deployed with model/UI gates | https://jill-vekariya.github.io/atlas-recsys/ |
 | Live Render demo | Blocked by Render account requirement | Authenticated free-plan creation returned HTTP 402; no public URL yet |
-| Public no-card Docker demonstration | Verified | https://cotton-gender-pts-metric.trycloudflare.com; temporary PC-hosted link, report in `reports/public_demo/deployment.json` |
+| Historical no-card Docker demonstration | Previously verified; unavailable in the 2026-10-23 audit (HTTP 503) | Original address and observations remain in `reports/public_demo/deployment.json`. Use the permanent browser lab above for sharing. |
 
 Fill external URLs only from successful platform responses. The locally tested system and
 prepared Docker configuration can be described now; “deployed” requires the corresponding

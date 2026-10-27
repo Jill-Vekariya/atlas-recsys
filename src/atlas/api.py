@@ -8,12 +8,13 @@ import time
 import uuid
 from collections import defaultdict, deque
 from threading import Lock
-from typing import Literal
+from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, generate_latest
 from pydantic import BaseModel, Field
 
+from atlas.middleware import BodyLimitMiddleware
 from atlas.registry import Registry
 from atlas.storage import Store
 
@@ -27,7 +28,9 @@ class RecommendRequest(BaseModel):
     algorithm: Literal[
         "auto", "popularity", "category_popularity", "als", "content", "tower", "ranked"
     ] = "auto"
-    preferred_categories: list[str] = Field(default_factory=list, max_length=10)
+    preferred_categories: list[Annotated[str, Field(min_length=1, max_length=100)]] = Field(
+        default_factory=list, max_length=10
+    )
     category_filter: str | None = Field(default=None, max_length=100)
     source: Literal["demo", "organic", "load_test"] = "demo"
 
@@ -40,15 +43,18 @@ class FeedbackRequest(BaseModel):
 
 
 def create_app(state_path=None, db_path=None, api_key=None, allow_faults=False):
+    expected_key = api_key if api_key is not None else os.getenv("ATLAS_API_KEY", "")
+    if os.getenv("ATLAS_ENV", "local") == "production" and len(expected_key) < 24:
+        raise ValueError("Production requires an API key of at least 24 characters")
     registry = Registry(state_path or os.getenv("ATLAS_STATE", "artifacts/registry.json"))
     store = Store(db_path or os.getenv("ATLAS_DB", "artifacts/feedback.sqlite"))
-    expected_key = api_key if api_key is not None else os.getenv("ATLAS_API_KEY", "")
     app = FastAPI(
         title="Atlas",
         version="0.1.0",
         description="Recommendation engineering lab",
         root_path=os.getenv("ATLAS_ROOT_PATH", ""),
     )
+    app.add_middleware(BodyLimitMiddleware, max_bytes=65_536)
     app.state.registry, app.state.store = registry, store
     app.state.faults = {}  # Test harness only; no fault-injection HTTP endpoint.
     prom = CollectorRegistry()

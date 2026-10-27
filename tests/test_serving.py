@@ -180,3 +180,12 @@ def test_feedback_export_separated(tmp_path):
     row = json.loads(out.read_text())
     assert row["source"] == "demo"
     assert row["user_key"] != "u"
+
+
+def test_api_body_limit_precedes_request_validation(tmp_path, trained):
+    client, app = make_client(tmp_path, trained)
+    response = client.post(
+        "/recommend", content=b"x" * 65_537, headers={"Content-Type": "application/json"}
+    )
+    assert response.status_code == 413
+    assert client.get("/health").status_code == 200

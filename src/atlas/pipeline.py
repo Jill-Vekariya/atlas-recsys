@@ -16,6 +16,7 @@ from atlas.data import read_prepared, sha256, stable_int
 from atlas.evaluation import evaluate, tradeoffs
 from atlas.features import FEATURE_NAMES, fit_content, histories, rank_features
 from atlas.models import train_als, train_tower
+from atlas.reports import write_new_report
 
 
 def write_manifest(out, cfg, dataset, training, version):
@@ -37,6 +38,9 @@ def write_manifest(out, cfg, dataset, training, version):
 
 def train(cfg: dict):
     start = time.perf_counter()
+    report_dir = Path(cfg["report_dir"])
+    if report_dir.exists() and any(report_dir.iterdir()):
+        raise ValueError("Reports already exist. Choose a new report_dir to retain prior evidence.")
     items, events, dataset = read_prepared(cfg)
     out = Path(cfg["bundle_dir"])
     if out.exists() and (out / "bundle.json").exists():
@@ -141,7 +145,7 @@ def train(cfg: dict):
     }
     write_manifest(out, cfg, dataset, info, version)
     bundle = Bundle(out)
-    validation = evaluate(bundle, events, cfg, "validation")
+    validation = evaluate(bundle, events, cfg, "validation", write=False)
     available = {k: v for k, v in validation["results"].items() if v["ndcg_at_10"] is not None}
     winner = max(available, key=lambda k: available[k]["ndcg_at_10"]) if available else "popularity"
     manifest = json.loads((out / "bundle.json").read_text())
@@ -149,7 +153,7 @@ def train(cfg: dict):
     manifest["selection_status"] = "Selected by validation macro NDCG@10; no test-based tuning"
     (out / "bundle.json").write_text(json.dumps(manifest, indent=2))
     validation["selected_algorithm"] = winner
-    (Path(cfg["report_dir"]) / "validation.json").write_text(json.dumps(validation, indent=2))
+    write_new_report(report_dir / "validation.json", validation)
     tradeoffs(bundle, events, cfg)
     tracking = {"enabled": cfg.get("mlflow", False)}
     if cfg.get("mlflow"):
@@ -175,7 +179,5 @@ def train(cfg: dict):
         except Exception as exc:
             tracking["status"] = "unavailable"
             tracking["error"] = str(exc)
-    (Path(cfg["report_dir"]) / "training.json").write_text(
-        json.dumps({**info, "mlflow": tracking}, indent=2)
-    )
+    write_new_report(report_dir / "training.json", {**info, "mlflow": tracking})
     return {"bundle": str(out), "selected_algorithm": winner, **info, "mlflow": tracking}

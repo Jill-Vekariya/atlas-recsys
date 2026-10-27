@@ -21,6 +21,7 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       ATLAS_API_KEY: ${ATLAS_API_KEY:-}
+      ATLAS_ENV: ${ATLAS_ENV:-local}
     volumes:
       - atlas-artifacts:/app/artifacts
     restart: unless-stopped
