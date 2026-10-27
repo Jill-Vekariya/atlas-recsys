@@ -1,12 +1,12 @@
 """Full-catalog relevance, subgroup diagnostics, and paired uncertainty."""
 
-import json
 import time
 from pathlib import Path
 
 import numpy as np
 
 from atlas.features import histories
+from atlas.reports import write_new_report
 
 ALGORITHMS = ["popularity", "category_popularity", "als", "content", "tower", "ranked"]
 
@@ -178,7 +178,7 @@ def evaluate(bundle, events, cfg, split="validation", write=True):
     if write:
         out = Path(cfg["report_dir"])
         out.mkdir(parents=True, exist_ok=True)
-        (out / f"{split}.json").write_text(json.dumps(report, indent=2))
+        write_new_report(out / f"{split}.json", report)
     return report
 
 
@@ -241,5 +241,5 @@ def tradeoffs(bundle, events, cfg):
     }
     out = Path(cfg["report_dir"])
     out.mkdir(parents=True, exist_ok=True)
-    (out / "tradeoffs.json").write_text(json.dumps(report, indent=2))
+    write_new_report(out / "tradeoffs.json", report)
     return report

@@ -2,7 +2,7 @@ seed: 42
 source: synthetic
 dataset_dir: data/processed/synthetic
 bundle_dir: artifacts/synthetic-v1
-report_dir: reports/synthetic
+report_dir: artifacts/reports/synthetic-v1
 synthetic_users: 100
 synthetic_items: 300
 synthetic_events: 6000
