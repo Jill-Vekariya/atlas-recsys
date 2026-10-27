@@ -1,253 +1,79 @@
-# Atlas — Cold-Start Recommendation Under a Strict Latency Budget
+# Atlas
 
-[Current status and remaining work](docs/CURRENT_STATUS.md) · [Interview practice](docs/INTERVIEW_PRACTICE.md)
+**Cold-start recommendation experiments connected to versioned serving and rollback.**
 
-[![checks](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml/badge.svg)](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml)
+Atlas compares popularity/content/collaborative baselines with PyTorch retrieval, FAISS indexing and optional LightGBM ranking. Chronological evaluation selects the default using validation only. FastAPI serves compatible bundles with fallback, stable canary assignment, exposure logging and validated feedback.
 
-Atlas is an end-to-end recommendation engineering project: PyTorch retrieval, FAISS indexing,
-LightGBM ranking, full-catalog temporal evaluation, FastAPI serving, a Streamlit lab, feedback
-logging, and verified model rollout/rollback.
+[Browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](docs/RESULTS.md) · [Model-selection failure case](docs/MODEL_SELECTION_CASE_STUDY.md) · [Interview guide](docs/INTERVIEW.md)
 
-The experiment asks how item content affects recommendations for products without training
-interactions, and what serving cost that improvement introduces. It keeps failed experiments
-and strong baselines visible. This repository does not establish production-scale performance
-or business uplift.
-
-This project was implemented and documented with AI assistance; personal contributions are recorded only when supported by the [ownership log](docs/OWNERSHIP.md).
-
-## Start here
-
-Read [measured results](docs/RESULTS.md), [the interview guide](docs/INTERVIEW_GUIDE.md),
-[deployment instructions](docs/DEPLOYMENT.md), and [ownership exercises](docs/OWNERSHIP.md).
-
-**Engineering case study:** [Why our validation-selected model lost to popularity on the final test](docs/MODEL_SELECTION_CASE_STUDY.md).
-Reproduce the validation-only selection decision from recorded reports with
-`uv run python scripts/model_selection_audit.py --report-dir reports/movielens`.
-The result is a documented generalization failure, not an invented uplift claim.
-
-**Final engineering review:** [Measured latency limits, evaluation cohorts and reproducibility](docs/FINAL_ENGINEERING_VERIFICATION.md).
-On the current Windows host, the synthetic bundle passed 5 RPS (~57 ms p95) but **did not meet**
-the 50 RPS / 150 ms target (measured ~15.7 s p95 with severe dispatch delay). These are
-machine/workload-specific diagnostics, not a production SLA. Use
-`uv run python scripts/cohort_evidence.py --report reports/movielens/validation.json`
-to inspect recorded cohort evidence; this does not retrain models.
-
-**[Open the live recommendation lab](https://jill-vekariya.github.io/atlas-recsys/)** ·
-[Source](https://github.com/Jill-Vekariya/atlas-recsys) · [Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys)
-
-[![Atlas recommendation lab](docs/images/atlas-demo.png)](https://jill-vekariya.github.io/atlas-recsys/)
-
-The GitHub Pages demo runs exported trained models directly in your browser. It needs no
-sign-in, API key, running PC, card, or backend. Compare seven modes, try new-user preferences,
-inspect ranking signals, and explore the real-data evidence. The interactive catalog is
-synthetic; likes and skips stay in your browser. [How browser inference works](docs/GITHUB_PAGES.md).
-
-The full Python/Docker platform includes FastAPI, FAISS, persistent feedback, monitoring, and
-rollback. These server features run when you launch Docker; GitHub Pages hosts the browser lab.
-
-The included numeric reports cover **real Amazon Reviews 2023 and MovieLens data**, plus a
-separately labeled synthetic fixture. The release includes a small synthetic demo bundle.
-Raw research datasets and real-data model bundles are not redistributed in the release.
-
-## Quick start: Python
-
-Install Python 3.12 and uv, then run from this directory:
-
-```bash
-uv sync --frozen --extra dev
-uv run atlas smoke --config configs/smoke.yaml
-uv run atlas activate --bundle artifacts/synthetic-v1
-uv run atlas serve
-```
-
-In a second terminal:
-
-```bash
-uv run streamlit run src/atlas/ui.py --browser.gatherUsageStats=false
-```
-
-Open http://127.0.0.1:8501 for the lab and http://127.0.0.1:8000/docs for the API.
-
-The smoke command creates the synthetic bundle omitted from Git. Run it once on a fresh clone.
-
-Existing bundles are immutable. To rerun a model experiment, copy a config and change its
-`bundle_dir` and `report_dir` rather than overwriting a completed bundle.
-
-## Quick start: Docker
-
-```bash
-docker compose up --build -d
-docker compose logs bootstrap
-```
-
-The bootstrap service creates a synthetic bundle in persistent volumes. The API starts after
-initialization and the demo starts after the API is healthy. Repeated starts reuse the bundle.
-Local ports bind to loopback. See the deployment guide for a domain, TLS, and persistent storage.
-
-For a single-container public-demo host, the Dockerfile's default `cloud` target includes the
-synthetic model and runs the API, Streamlit, and Caddy on one public port:
-
-```bash
-docker build --target cloud -t atlas:cloud .
-docker run --rm -p 127.0.0.1:10000:10000 -e ATLAS_EPHEMERAL=true atlas:cloud
-```
-
-Open http://127.0.0.1:10000 for the lab and http://127.0.0.1:10000/api/docs for API documentation.
-Local Compose uses separate ports; the single-container image uses the one mapped port.
-The configured Windows PC maps that port to **10080** instead.
-
-| Launch mode | Lab | API documentation |
-|---|---|---|
-| Public browser demo | https://jill-vekariya.github.io/atlas-recsys/ | Browser inference; no hosted Python API |
-| Python or local Compose | http://127.0.0.1:8501 | http://127.0.0.1:8000/docs |
-| Docker command above | http://127.0.0.1:10000 | http://127.0.0.1:10000/api/docs |
-| Configured Windows PC | http://localhost:10080 | http://localhost:10080/api/docs |
-
-`localhost` and `127.0.0.1` always refer to the computer opening the link. They cannot be used
-as public resume links. Use the GitHub Pages address for sharing. The older Cloudflare tunnel
-is optional and temporary; see [the no-card guide](docs/FREE_DEMO.md).
-
-**Verification:** The baseline CI passed 35 Python tests after the model-selection updates; the final
-verification change requires a fresh CI run before those results can be claimed for its commit.
-Browser inference has five numerical/protocol tests and four real-browser interaction tests. The Pages deployment passed its independent
-browser checks. Docker/auth/feedback/WebSocket checks and real-data experiments are recorded
-in [the verification record](docs/VERIFICATION.md). Check the Actions badges for the latest commit.
-
-[Published Docker image](https://github.com/users/Jill-Vekariya/packages/container/package/atlas-recsys):
-
-```bash
-docker pull ghcr.io/jill-vekariya/atlas-recsys:latest
-docker run --rm -p 127.0.0.1:10000:10000 -e ATLAS_EPHEMERAL=true ghcr.io/jill-vekariya/atlas-recsys:latest
-```
-
-Anonymous registry access and the published digest were verified. For a reproducible deployment,
-pin the digest in [the image manifest](reports/deployment/image-manifest.json).
-
-[No-card public demonstration guide](docs/FREE_DEMO.md). Render creation was blocked by an
-account payment-information requirement, and that provider was not used.
-
-## Data and experiments
-
-```bash
-# Real Amazon catalog sampled independently of review labels.
-uv run atlas prepare --config configs/amazon.yaml
-uv run atlas train --config configs/amazon.yaml
-uv run atlas evaluate --config configs/amazon.yaml --split test
-
-# A second real-data workload with richer user histories.
-uv run atlas prepare --config configs/movielens.yaml
-uv run atlas train --config configs/movielens.yaml
-uv run atlas evaluate --config configs/movielens.yaml --split test
-
-# Item representation ablations use validation only.
-uv run atlas ablations --config configs/movielens.yaml
-uv run atlas tradeoffs --config configs/movielens.yaml
-```
-
-These commands download public research data. MovieLens has research-use conditions; inspect
-its downloaded README. Review ratings are preference proxies, not purchases or impressions.
-
-## Evaluation protocol
-
-Four **global chronological windows** separate retrieval training, ranker training, validation,
-and final test. Equal-time interactions do not enter earlier histories. A deterministic item
-cohort has all events withheld from both training windows. Catalog text transforms are fit on
-the supplied catalog snapshot, an explicitly transductive assumption.
-
-The ranker uses candidates from a frozen earlier retriever, with no artificial injection of
-ground-truth items. Queries with no informative labels are counted and excluded from ranker
-training; they remain in end-to-end evaluation.
-
-Evaluation uses the fixed eligible catalog, excludes all products previously rated before the
-prediction cutoff, macro-averages users, reports cold/new/returning cohorts, and bootstraps paired
-user differences. Model selection uses validation NDCG@10 only. Test results never select the
-serving default. A validation-selected model can lose on test, and this happened in the recorded
-MovieLens run.
-
-## What distinguishes this implementation
-
-- Controlled item cold-start experiments with leakage checks.
-- Separate relevance recall and approximate-index recall.
-- A shared evaluation/serving feature implementation.
-- A recommendation feature inspector with explicitly non-causal diagnostics.
-- Training/export parity checks between PyTorch and NumPy inference.
-- Content-only and identity-only item-tower ablations.
-- Open-loop HTTP benchmarks that include dispatch delay and queueing.
-- Idempotent feedback, separate exposure logs, and exclusion of load-test feedback.
-- Compatible model/index/feature bundles with asset checksums.
-- Deterministic canary assignment and a regression-triggered rollback demonstration.
-- Measured failures and decision records rather than unsupported improvement claims.
-
-## Verification
-
-```bash
-uv run pytest -q
-uv run ruff check src tests scripts
-uv run ruff format --check src tests scripts
-uv run atlas verify-local --rate 50 --duration 10 --check-ui
-uv run atlas canary-demo
-```
-
-For an already running server:
-
-```bash
-uv run atlas load-test --url http://127.0.0.1:8000 --rate 50 --duration 30
-```
-
-The local verifier starts a real HTTP server, runs the client workload, optionally exercises
-Streamlit user/feedback flows, and then shuts down that server. This is a local benchmark,
-not an external hosting service.
-
-## Lifecycle commands
-
-```bash
-uv run atlas inspect --bundle artifacts/synthetic-v1
-uv run atlas activate --bundle artifacts/synthetic-v1
-uv run atlas activate --bundle artifacts/a-new-version --canary-percent 5
-uv run atlas rollback
-uv run atlas export-feedback --output data/feedback/staged.jsonl
-```
-
-Feedback export is a staging dataset with source and model version retained. It does not
-automatically retrain a model or turn clicks into purchase labels. See the data card and runbook.
-
-## Publishing
-
-Use `scripts/publish_github.sh` for a new fork after authenticating GitHub CLI and configuring your own Git
-author identity. It defaults to a private repository. Set `ATLAS_VISIBILITY=public` to deliberately
-publish publicly. CI checks Python behavior and a Docker Compose startup. The Pages workflow checks numerical parity
-and browser interactions before publishing the lab. A separate workflow
-publishes the container to GHCR when manually invoked or when a version tag is pushed.
+The browser lab runs exported models over a synthetic catalog; likes/skips stay in the browser. FastAPI, FAISS, persistent feedback and rollout controls belong to the separate Python/Docker application. [Browser architecture](docs/GITHUB_PAGES.md).
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    D["Ratings and catalog snapshot"] --> P["Validated temporal data"]
-    P --> T["A: retrieval training"]
-    T --> I["FAISS indexes"]
-    P --> R["B: ranking targets"]
-    I --> R
-    R --> B["Compatible model bundle"]
-    I --> B
-    B --> E["Validation selection and test report"]
-    B --> A["FastAPI serving"]
-    U["Streamlit recommendation lab"] --> A
-    A --> F["Exposure and feedback store"]
-    A --> M["Metrics and canary guard"]
+  D["Temporal interactions and catalog snapshot"] --> T["Retrieval and baseline training"]
+  T --> R["Later-window ranking targets"]
+  R --> V["Validation-only default selection"]
+  T --> V
+  V --> B["Compatible model, feature and index bundle"]
+  B --> A["FastAPI, stable canary routing and fallback"]
+  A --> F["Exposure ledger and validated feedback"]
+  A --> M["Metrics and explicit rollback"]
 ```
 
-## License
+Retrieval uses window A; ranking uses frozen A retrieval/histories with later B targets. Validation and test are separate later windows. Controlled cold items lack training interactions but retain catalog snapshot metadata; this does not reconstruct real launch dates. [Evaluation decision](docs/decisions/001-evaluation.md) · [Serving decision](docs/decisions/002-serving.md).
 
-Code and documentation use the [MIT license](LICENSE); external data keeps its own [terms](NOTICE.md).
+## Quick start: Python API
 
-## Practical limits
+Requires Git, Python 3.12, uv and dependency-download access. On a fresh checkout:
 
-This is a single-host engineering portfolio. There is no distributed training, online business
-A/B result, automatic feedback retraining, learned sequential model, or continuously updated
-catalog. Histories refresh when a new bundle is built. The 150 ms deadline detects a slow result
-after completion; it cannot interrupt a native FAISS operation. Asset checksums detect corruption,
-not malicious artifacts. Load only bundles built by a trusted operator.
+```bash
+git clone https://github.com/Jill-Vekariya/atlas-recsys.git
+cd atlas-recsys
+uv sync --frozen --extra dev
+uv run --no-sync atlas smoke --config configs/smoke.yaml
+uv run --no-sync atlas serve
+```
 
-See [the data card](docs/DATA_CARD.md), [model card](docs/MODEL_CARD.md), and
-[decision records](docs/decisions/001-evaluation.md) for scope and assumptions.
+Open `http://127.0.0.1:8000/docs`. Smoke prepares synthetic data, trains/evaluates a bundle and activates it; a second activation command is unnecessary. The optional Streamlit lab is `uv run --no-sync streamlit run src/atlas/ui.py --browser.gatherUsageStats=false`, at `http://127.0.0.1:8501`.
+
+Completed bundles/reports are retained. For another experiment, copy the config and select unused `dataset_dir`, `bundle_dir`, `report_dir` and routing `--state` paths. Fresh smoke reports live under `artifacts/reports/synthetic-v1/`; tracked `reports/` measurements are historical. Do not delete old evidence to make a repeated command pass.
+
+For Docker Linux/Compose v2, `docker compose up --build -d` bootstraps the synthetic model in persistent volumes before starting API and lab. Stop with `docker compose down`, preserving volumes. [Deployment guide](docs/DEPLOYMENT.md) · [Local Docker](docs/LOCAL_DOCKER.md). A public browser lab is not a hosted Python API; the earlier Render backend attempt was blocked by a payment-information requirement.
+
+## Evidence and verification
+
+| Evidence | Recorded result | Interpretation |
+| --- | --- | --- |
+| [MovieLens case study](docs/MODEL_SELECTION_CASE_STUDY.md) | Validation-selected model lost to popularity on final test | Retained generalization failure; no invented uplift |
+| [Amazon/MovieLens reports](docs/RESULTS.md) | Real-data offline comparisons with explicit cohort sizes and one seed | Ratings are preference proxies; catalog snapshot and cohort assumptions apply |
+| [Windows load diagnostic](docs/FINAL_ENGINEERING_VERIFICATION.md) | Synthetic 5 RPS diagnostic met the target; 50 RPS missed it | Host/workload-specific observations, not a latency SLA |
+| [Stage 4 local review](docs/INTERVIEW.md) | 24 selected tests passed | Synthetic temporary serving, fallback, feedback, rollout and retention fixtures |
+
+From the installed checkout:
+
+```bash
+uv run --no-sync pytest -q
+uv run --no-sync ruff check src tests scripts
+uv run --no-sync ruff format --check src tests scripts
+uv run --no-sync python scripts/model_selection_audit.py --report-dir reports/movielens
+python scripts/check_links.py
+```
+
+The audit replays recorded model selection without retraining. New canary/load experiments need fresh output paths and the workload limits in [the runbook](docs/RUNBOOK.md); a synthetic injected-error rollback demonstrates routing mechanics, not measured online recommendation quality. The [image manifest](reports/deployment/image-manifest.json) identifies historical image evidence; a mutable `latest` tag is not a reproducible source identity.
+
+## Serving contract and limits
+
+- Bundle activation checks assets, dimensions, item mappings and feature order before changing routing. Load only trusted operator-built artifacts; checksums detect inconsistency, not authenticity.
+- Seen items are excluded. Retrieval exceptions fall back to popularity with an explicit reason. The 150 ms elapsed check happens after retrieval returns and cannot interrupt a native FAISS call.
+- Histories are bundle snapshots. Feedback validates exposed items and event identity, rejects load-test traffic and exports separately; it does not immediately retrain/personalize the next request.
+- Production mode requires `ATLAS_ENV=production` and a private `ATLAS_API_KEY` of at least 24 characters before startup. Actual request-body bytes are capped at 65,536 before JSON parsing. Local mode/Compose bind to loopback; public deployment needs separate TLS, resource and persistence review.
+
+Single-host state, static catalog/histories, coarse process-local limits and limited offline cohorts remain explicit. No production scale, business A/B gain or fresh public backend availability is established. [Data card](docs/DATA_CARD.md) · [Model card](docs/MODEL_CARD.md).
+
+## Ownership, next work and license
+
+Implementation, experiments and documentation used AI assistance. [OWNERSHIP.md](docs/OWNERSHIP.md) keeps personal coding/reproduction exercises pending until actual evidence is added. Next: rolling as-of histories, reviewed feedback import and a new untouched temporal evaluation period, before infrastructure expansion without a measured need.
+
+Existing [LICENSE](LICENSE) and [data-rights notice](NOTICE.md) are preserved. Licensing/attribution decisions remain subject to owner review; this presentation update selects no new license and grants no external dataset rights.
