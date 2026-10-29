@@ -77,3 +77,7 @@ Single-host state, static catalog/histories, coarse process-local limits and lim
 Implementation, experiments and documentation used AI assistance. [OWNERSHIP.md](docs/OWNERSHIP.md) keeps personal coding/reproduction exercises pending until actual evidence is added. Next: rolling as-of histories, reviewed feedback import and a new untouched temporal evaluation period, before infrastructure expansion without a measured need.
 
 Existing [LICENSE](LICENSE) and [data-rights notice](NOTICE.md) are preserved. Licensing/attribution decisions remain subject to owner review; this presentation update selects no new license and grants no external dataset rights.
+
+## Temporal seed study
+
+The [Stage 4 temporal study](docs/STAGE4_TEMPORAL_STUDY.md) fixes temporal data and evaluation users across seeds, seals validation-only selections before final evaluation, and preserves missing cohorts and unfavorable model comparisons.
