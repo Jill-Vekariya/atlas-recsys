@@ -1,12 +1,24 @@
 # Atlas
 
-**Cold-start recommendation experiments connected to versioned serving and rollback.**
+**Cold-start recommendations, from offline comparison to versioned serving.**
 
-Atlas compares popularity/content/collaborative baselines with PyTorch retrieval, FAISS indexing and optional LightGBM ranking. Chronological evaluation selects the default using validation only. FastAPI serves compatible bundles with fallback, stable canary assignment, exposure logging and validated feedback.
+Atlas compares popularity, collaborative and content baselines with a PyTorch
+two-tower retriever, FAISS and optional LightGBM ranking. The API serves compatible
+model/index bundles with fallback, canary routing and rollback.
 
-[Browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](docs/RESULTS.md) · [Model-selection failure case](docs/MODEL_SELECTION_CASE_STUDY.md) · [Interview guide](docs/INTERVIEW.md)
+[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](docs/RESULTS.md) · [Model-selection case study](docs/MODEL_SELECTION_CASE_STUDY.md) · [Code walkthrough](docs/INTERVIEW.md)
 
-The browser lab runs exported models over a synthetic catalog; likes/skips stay in the browser. FastAPI, FAISS, persistent feedback and rollout controls belong to the separate Python/Docker application. [Browser architecture](docs/GITHUB_PAGES.md).
+## A result worth inspecting
+
+The validation-selected two-tower model reached **0.2340 test NDCG@10**,
+compared with **0.2598 for popularity**, in the recorded MovieLens experiment.
+The case study follows the selection decision and the cold-start trade-off.
+It is a single-seed offline comparison, with validation-only selection.
+
+**Demo scope:** the browser lab runs exported models on a synthetic catalog;
+likes and skips stay in the browser. FastAPI, FAISS, persistent feedback and
+rollout controls run in the separate Python/Docker application.
+[Browser architecture](docs/GITHUB_PAGES.md).
 
 ## Architecture
 
