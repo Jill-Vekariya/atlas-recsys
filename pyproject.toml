@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=78"]
+requires = ["setuptools>=84.1.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -28,6 +28,11 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.uv]
+constraint-dependencies = [
+  "filelock>=4.2.1", "gitpython>=3.2.1", "pyasn1>=0.6.5", "setuptools>=84.1.0",
+]
 
 [tool.ruff]
 line-length = 100

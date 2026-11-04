@@ -1,6 +1,7 @@
 name: checks
 on:
   push:
+    branches: [main]
   pull_request:
 permissions:
   contents: read
@@ -18,6 +19,8 @@ jobs:
           python-version: "3.12"
       - run: pip install uv==0.12.23
       - run: uv sync --frozen --extra dev
+      - name: Audit locked Python dependencies
+        run: uv tool run --from pip-audit==2.10.1 pip-audit --path .venv/lib/python3.12/site-packages
       - run: uv run ruff check src tests scripts
       - run: uv run ruff format --check src tests scripts
       - run: uv run pytest -q

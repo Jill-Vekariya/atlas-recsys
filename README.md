@@ -1,12 +1,28 @@
 # Atlas
 
-**Cold-start recommendation experiments connected to versioned serving and rollback.**
+**Cold-start recommendations, from offline comparison to versioned serving.**
 
-Atlas compares popularity/content/collaborative baselines with PyTorch retrieval, FAISS indexing and optional LightGBM ranking. Chronological evaluation selects the default using validation only. FastAPI serves compatible bundles with fallback, stable canary assignment, exposure logging and validated feedback.
+Atlas compares popularity, collaborative and content baselines with a PyTorch
+two-tower retriever, FAISS and optional LightGBM ranking. The API serves compatible
+model/index bundles with fallback, canary routing and rollback.
 
-[Browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](docs/RESULTS.md) · [Model-selection failure case](docs/MODEL_SELECTION_CASE_STUDY.md) · [Interview guide](docs/INTERVIEW.md)
+[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](docs/RESULTS.md) · [Model-selection case study](docs/MODEL_SELECTION_CASE_STUDY.md) · [Code walkthrough](docs/INTERVIEW.md)
 
-The browser lab runs exported models over a synthetic catalog; likes/skips stay in the browser. FastAPI, FAISS, persistent feedback and rollout controls belong to the separate Python/Docker application. [Browser architecture](docs/GITHUB_PAGES.md).
+## A result worth inspecting
+
+The validation-selected two-tower model reached **0.2340 test NDCG@10**,
+compared with **0.2598 for popularity**, in the recorded MovieLens experiment.
+The case study follows the selection decision and the cold-start trade-off.
+It is a single-seed offline comparison, with validation-only selection.
+
+**Demo scope:** the browser lab runs exported models on a synthetic catalog;
+likes and skips stay in the browser. FastAPI, FAISS, persistent feedback and
+rollout controls run in the separate Python/Docker application.
+[Browser architecture](docs/GITHUB_PAGES.md).
+
+## Further engineering checks
+
+[Multi-seed temporal study](docs/STAGE4_TEMPORAL_STUDY.md) seals validation selections before test evaluation and retains failed seeds and missing cohorts.
 
 ## Architecture
 
@@ -77,7 +93,3 @@ Single-host state, static catalog/histories, coarse process-local limits and lim
 Implementation, experiments and documentation used AI assistance. [OWNERSHIP.md](docs/OWNERSHIP.md) keeps personal coding/reproduction exercises pending until actual evidence is added. Next: rolling as-of histories, reviewed feedback import and a new untouched temporal evaluation period, before infrastructure expansion without a measured need.
 
 Existing [LICENSE](LICENSE) and [data-rights notice](NOTICE.md) are preserved. Licensing/attribution decisions remain subject to owner review; this presentation update selects no new license and grants no external dataset rights.
-
-## Temporal seed study
-
-The [Stage 4 temporal study](docs/STAGE4_TEMPORAL_STUDY.md) fixes temporal data and evaluation users across seeds, seals validation-only selections before final evaluation, and preserves missing cohorts and unfavorable model comparisons.
