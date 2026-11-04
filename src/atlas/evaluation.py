@@ -40,7 +40,7 @@ def queries(bundle, events, split, cfg):
         if truth:
             result.append((str(user), state["positive"], seen, truth))
     # Deterministic uniform sample of eligible users, never chosen by model performance.
-    rng = np.random.default_rng(cfg["seed"])
+    rng = np.random.default_rng(cfg.get("evaluation_seed", cfg["seed"]))
     count = min(cfg["max_eval_users"], len(result))
     selected = sorted(rng.choice(len(result), count, replace=False)) if count else []
     return [result[i] for i in selected], {
@@ -150,6 +150,18 @@ def evaluate(bundle, events, cfg, split="validation", write=True):
                 "zero_history_recall_at_100": average(
                     [x["zero_history_recall_at_100"] for x in subgroup]
                 ),
+                "cohort_counts": {
+                    "returning": sum(x["history_group"] == "returning" for x in subgroup),
+                    "new": sum(x["history_group"] == "new" for x in subgroup),
+                    "controlled_cold": sum(x["cold_recall_at_100"] is not None for x in subgroup),
+                    "head": sum(x["head_recall_at_100"] is not None for x in subgroup),
+                    "low_history": sum(
+                        x["low_history_recall_at_100"] is not None for x in subgroup
+                    ),
+                    "zero_history": sum(
+                        x["zero_history_recall_at_100"] is not None for x in subgroup
+                    ),
+                },
             }
         )
         results[algorithm] = result
@@ -157,6 +169,8 @@ def evaluate(bundle, events, cfg, split="validation", write=True):
         "source": bundle.manifest["dataset"]["source"],
         "synthetic": bundle.manifest["dataset"]["synthetic"],
         "split": split,
+        "training_seed": cfg["seed"],
+        "evaluation_seed": cfg.get("evaluation_seed", cfg["seed"]),
         "protocol": "Full fixed catalog snapshot; exclude all pre-cutoff rated items; macro average users",
         "population": population,
         "results": results,

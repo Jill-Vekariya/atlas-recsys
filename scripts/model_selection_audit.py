@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 
@@ -18,11 +19,18 @@ def audit(validation: dict, test: dict) -> dict:
             raise ValueError(f"Reports disagree on {key}")
     val = validation["results"]
     heldout = test["results"]
-    names = sorted(set(val) & set(heldout))
+    if set(val) != set(heldout):
+        raise ValueError("Validation/test model sets differ; missing tests cannot change selection")
+    names = sorted(val)
     if not names:
         raise ValueError("No models shared between reports")
     available = {name: val[name].get("ndcg_at_10") for name in names}
     available = {name: score for name, score in available.items() if score is not None}
+    if any(
+        type(score) not in (int, float) or not math.isfinite(score) or not 0 <= score <= 1
+        for score in available.values()
+    ):
+        raise ValueError("Finite validation NDCG scores in [0,1] required")
     if not available:
         raise ValueError("No valid validation NDCG@10 scores")
     # Match the training pipeline's tie-breaking: use validation report insertion order.

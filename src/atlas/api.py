@@ -11,6 +11,8 @@ from threading import Lock
 from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, generate_latest
 from pydantic import BaseModel, Field
 
@@ -57,6 +59,14 @@ def create_app(state_path=None, db_path=None, api_key=None, allow_faults=False):
     app.add_middleware(BodyLimitMiddleware, max_bytes=65_536)
     app.state.registry, app.state.store = registry, store
     app.state.faults = {}  # Test harness only; no fault-injection HTTP endpoint.
+
+    @app.exception_handler(RequestValidationError)
+    async def invalid_request(request: Request, exc: RequestValidationError):
+        # Invalid JSON numbers can enter error inputs as NaN/Infinity. Keep the
+        # field diagnostics JSON-safe and avoid echoing submitted payloads.
+        detail = [{key: error[key] for key in ("loc", "msg", "type")} for error in exc.errors()]
+        return JSONResponse({"detail": detail}, status_code=422)
+
     prom = CollectorRegistry()
     requests = Counter(
         "atlas_requests_total", "Recommendation requests", ["slot", "algorithm"], registry=prom
@@ -80,7 +90,8 @@ def create_app(state_path=None, db_path=None, api_key=None, allow_faults=False):
 
     def authorize(request: Request, x_api_key: str | None = Header(default=None)):
         if expected_key and (
-            x_api_key is None or not secrets.compare_digest(x_api_key, expected_key)
+            x_api_key is None
+            or not secrets.compare_digest(x_api_key.encode("utf-8"), expected_key.encode("utf-8"))
         ):
             raise HTTPException(401, "Invalid API key")
         peer = request.client.host if request.client else "local"

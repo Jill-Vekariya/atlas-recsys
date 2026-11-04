@@ -20,6 +20,10 @@ likes and skips stay in the browser. FastAPI, FAISS, persistent feedback and
 rollout controls run in the separate Python/Docker application.
 [Browser architecture](docs/GITHUB_PAGES.md).
 
+## Further engineering checks
+
+[Multi-seed temporal study](docs/STAGE4_TEMPORAL_STUDY.md) seals validation selections before test evaluation and retains failed seeds and missing cohorts.
+
 ## Architecture
 
 ```mermaid
