@@ -4,7 +4,7 @@
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
 [![License](https://img.shields.io/badge/license-see%20LICENSE-lightgrey)](LICENSE)
 
-**[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/)** · [Model-selection case study](docs/MODEL_SELECTION_CASE_STUDY.md) · [Recorded results](docs/RESULTS.md) · [Code walkthrough](docs/INTERVIEW.md)
+**[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/)** · [Model-selection case study](docs/MODEL_SELECTION_CASE_STUDY.md) · [Recorded results](docs/RESULTS.md) · [Runbook](docs/RUNBOOK.md)
 
 ## The problem
 
@@ -82,9 +82,6 @@ Optional Streamlit lab: `uv run --no-sync streamlit run src/atlas/ui.py` (port 8
 
 [Data card](docs/DATA_CARD.md) · [Model card](docs/MODEL_CARD.md) · [Full reference](docs/REFERENCE.md)
 
-## How this was built
-
-I used AI coding assistants throughout this project. [HOW_THIS_WAS_BUILT.md](docs/HOW_THIS_WAS_BUILT.md) explains what was assisted, what I verified myself, and what I am still working through. The full attribution record is in [OWNERSHIP.md](docs/OWNERSHIP.md).
 
 ## License
 

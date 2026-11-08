@@ -8,7 +8,7 @@ Atlas compares popularity, collaborative and content baselines with a PyTorch
 two-tower retriever, FAISS and optional LightGBM ranking. The API serves compatible
 model/index bundles with fallback, canary routing and rollback.
 
-[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](RESULTS.md) · [Model-selection case study](MODEL_SELECTION_CASE_STUDY.md) · [Code walkthrough](INTERVIEW.md)
+[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](RESULTS.md) · [Model-selection case study](MODEL_SELECTION_CASE_STUDY.md) · [Runbook](RUNBOOK.md)
 
 ## A result worth inspecting
 
@@ -58,7 +58,7 @@ Open `http://127.0.0.1:8000/docs`. Smoke prepares synthetic data, trains/evaluat
 
 Completed bundles/reports are retained. For another experiment, copy the config and select unused `dataset_dir`, `bundle_dir`, `report_dir` and routing `--state` paths. Fresh smoke reports live under `artifacts/reports/synthetic-v1/`; tracked `reports/` measurements are historical. Do not delete old evidence to make a repeated command pass.
 
-For Docker Linux/Compose v2, `docker compose up --build -d` bootstraps the synthetic model in persistent volumes before starting API and lab. Stop with `docker compose down`, preserving volumes. [Deployment guide](DEPLOYMENT.md) · [Local Docker](LOCAL_DOCKER.md). A public browser lab is not a hosted Python API; the earlier Render backend attempt was blocked by a payment-information requirement.
+For Docker Linux/Compose v2, `docker compose up --build -d` bootstraps the synthetic model in persistent volumes before starting API and lab. Stop with `docker compose down`, preserving volumes. [Deployment guide](DEPLOYMENT.md). A public browser lab is not a hosted Python API; the earlier Render backend attempt was blocked by a payment-information requirement.
 
 ## Evidence and verification
 
@@ -67,7 +67,7 @@ For Docker Linux/Compose v2, `docker compose up --build -d` bootstraps the synth
 | [MovieLens case study](MODEL_SELECTION_CASE_STUDY.md) | Validation-selected model lost to popularity on final test | Retained generalization failure; no invented uplift |
 | [Amazon/MovieLens reports](RESULTS.md) | Real-data offline comparisons with explicit cohort sizes and one seed | Ratings are preference proxies; catalog snapshot and cohort assumptions apply |
 | [Windows load diagnostic](FINAL_ENGINEERING_VERIFICATION.md) | Synthetic 5 RPS diagnostic met the target; 50 RPS missed it | Host/workload-specific observations, not a latency SLA |
-| [Stage 4 local review](INTERVIEW.md) | 24 selected tests passed | Synthetic temporary serving, fallback, feedback, rollout and retention fixtures |
+| Stage 4 local review | 24 selected tests passed | Synthetic temporary serving, fallback, feedback, rollout and retention fixtures |
 
 From the installed checkout:
 
@@ -90,8 +90,8 @@ The audit replays recorded model selection without retraining. New canary/load e
 
 Single-host state, static catalog/histories, coarse process-local limits and limited offline cohorts remain explicit. No production scale, business A/B gain or fresh public backend availability is established. [Data card](DATA_CARD.md) · [Model card](MODEL_CARD.md).
 
-## Ownership, next work and license
+## Next work and license
 
-Implementation, experiments and documentation used AI assistance. [OWNERSHIP.md](OWNERSHIP.md) keeps personal coding/reproduction exercises pending until actual evidence is added. Next: rolling as-of histories, reviewed feedback import and a new untouched temporal evaluation period, before infrastructure expansion without a measured need.
+Next: rolling as-of histories, reviewed feedback import and a new untouched temporal evaluation period, before infrastructure expansion without a measured need.
 
-Existing [LICENSE](../LICENSE) and [data-rights notice](../NOTICE.md) are preserved. Licensing/attribution decisions remain subject to owner review; this presentation update selects no new license and grants no external dataset rights.
+Existing [LICENSE](../LICENSE) and [data-rights notice](../NOTICE.md) are preserved.

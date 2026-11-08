@@ -44,5 +44,5 @@ out-of-range validation NDCG scores are rejected.
 
 **VERIFIED:** one three-seed run, 52 local tests and lint/format checks. Local
 dependencies were recorded and were not a fresh frozen-lock installation.
-Compatibility checks were preserved. AI-assisted implementation; no independent
-user contribution, production recommendation traffic or new branch CI is claimed.
+Compatibility checks were preserved. No production recommendation traffic or new
+branch CI is claimed.
