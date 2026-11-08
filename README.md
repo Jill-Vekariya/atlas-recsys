@@ -1,28 +1,39 @@
-# Atlas
+# Atlas — cold-start recommendations, from offline experiment to versioned serving
 
-**Cold-start recommendations, from offline comparison to versioned serving.**
+[![CI](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml/badge.svg)](https://github.com/Jill-Vekariya/atlas-recsys/actions/workflows/ci.yml)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
+[![License](https://img.shields.io/badge/license-see%20LICENSE-lightgrey)](LICENSE)
 
-Atlas compares popularity, collaborative and content baselines with a PyTorch
-two-tower retriever, FAISS and optional LightGBM ranking. The API serves compatible
-model/index bundles with fallback, canary routing and rollback.
+**[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/)** · [Model-selection case study](docs/MODEL_SELECTION_CASE_STUDY.md) · [Recorded results](docs/RESULTS.md) · [Code walkthrough](docs/INTERVIEW.md)
 
-[Try the browser lab](https://jill-vekariya.github.io/atlas-recsys/) · [Recorded results](docs/RESULTS.md) · [Model-selection case study](docs/MODEL_SELECTION_CASE_STUDY.md) · [Code walkthrough](docs/INTERVIEW.md)
+## The problem
 
-## A result worth inspecting
+Every catalogue has items nobody has interacted with yet: a new product, a new film, a new course. Collaborative filtering cannot recommend them, and the usual offline evaluation (random train/test split) quietly leaks the future into training. Atlas is my attempt to build a recommender that handles cold items honestly and to serve it the way a real team would: versioned, with a fallback, and with a way to roll back.
 
-The validation-selected two-tower model reached **0.2340 test NDCG@10**,
-compared with **0.2598 for popularity**, in the recorded MovieLens experiment.
-The case study follows the selection decision and the cold-start trade-off.
-It is a single-seed offline comparison, with validation-only selection.
+## What I built
 
-**Demo scope:** the browser lab runs exported models on a synthetic catalog;
-likes and skips stay in the browser. FastAPI, FAISS, persistent feedback and
-rollout controls run in the separate Python/Docker application.
-[Browser architecture](docs/GITHUB_PAGES.md).
+- **Four approaches compared on the same chronological split:** popularity, item-based collaborative filtering, a content baseline, and a PyTorch two-tower retriever with FAISS nearest-neighbour search and an optional LightGBM re-ranker.
+- **Time-respecting evaluation:** retrieval trains on window A, ranking targets come from a later window B, and validation and test are separate later windows. Cold items are held out of training but keep their catalogue metadata.
+- **A serving layer in FastAPI:** model/index bundles are validated before activation, traffic can be canaried between bundles, retrieval failures fall back to popularity with an explicit reason, and rollback is a single command.
+- **An exposure and feedback ledger:** every recommendation is logged with its bundle version so that later feedback can be joined back to what the user actually saw.
+- **A browser lab** that runs exported models on a synthetic catalogue entirely client-side, so anyone can try it without a backend.
 
-## Further engineering checks
+## Results
 
-[Multi-seed temporal study](docs/STAGE4_TEMPORAL_STUDY.md) seals validation selections before test evaluation and retains failed seeds and missing cohorts.
+| Experiment | Result | What it tells you |
+| --- | --- | --- |
+| MovieLens, validation-selected two-tower | **0.2340 test NDCG@10** | The model I would have shipped based on validation |
+| MovieLens, popularity baseline | **0.2598 test NDCG@10** | The baseline beat it on the final test |
+| [Multi-seed temporal study](docs/STAGE4_TEMPORAL_STUDY.md) | Selection sealed before test; failed seeds retained | Guards against picking the lucky seed |
+| Load diagnostic (local, synthetic) | 5 RPS met target, 50 RPS missed | Single-host numbers, not an SLA |
+
+The headline is a negative result and I kept it on purpose. The [case study](docs/MODEL_SELECTION_CASE_STUDY.md) walks through why validation-only selection picked a model that lost to popularity, and what the cold-start cohort looked like underneath that average. Single seed, offline, preference ratings as proxies: see [RESULTS.md](docs/RESULTS.md) for every caveat.
+
+## Where this applies
+
+- **E-commerce and marketplaces:** new listings need impressions before they have signals. The cold-item cohort metrics are the ones a merchandising team actually cares about.
+- **Media and ed-tech:** new releases and new courses have the same problem, and the chronological split mirrors how those systems are evaluated in practice.
+- **Any ML platform team:** bundle validation, canary routing, fallback and rollback are the parts that turn a notebook into something you can put behind an API.
 
 ## Architecture
 
@@ -38,58 +49,43 @@ flowchart TD
   A --> M["Metrics and explicit rollback"]
 ```
 
-Retrieval uses window A; ranking uses frozen A retrieval/histories with later B targets. Validation and test are separate later windows. Controlled cold items lack training interactions but retain catalog snapshot metadata; this does not reconstruct real launch dates. [Evaluation decision](docs/decisions/001-evaluation.md) · [Serving decision](docs/decisions/002-serving.md).
+Design notes: [evaluation decision](docs/decisions/001-evaluation.md) · [serving decision](docs/decisions/002-serving.md) · [browser-lab architecture](docs/GITHUB_PAGES.md).
 
-## Quick start: Python API
+## Quick start
 
-Requires Git, Python 3.12, uv and dependency-download access. On a fresh checkout:
+Requires Python 3.12 and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 git clone https://github.com/Jill-Vekariya/atlas-recsys.git
 cd atlas-recsys
 uv sync --frozen --extra dev
-uv run --no-sync atlas smoke --config configs/smoke.yaml
-uv run --no-sync atlas serve
+uv run --no-sync atlas smoke --config configs/smoke.yaml   # synthetic data, train, evaluate, activate
+uv run --no-sync atlas serve                               # http://127.0.0.1:8000/docs
 ```
 
-Open `http://127.0.0.1:8000/docs`. Smoke prepares synthetic data, trains/evaluates a bundle and activates it; a second activation command is unnecessary. The optional Streamlit lab is `uv run --no-sync streamlit run src/atlas/ui.py --browser.gatherUsageStats=false`, at `http://127.0.0.1:8501`.
+Optional Streamlit lab: `uv run --no-sync streamlit run src/atlas/ui.py` (port 8501). Docker: `docker compose up --build -d`. Tests and lint: `uv run --no-sync pytest -q` and `uv run --no-sync ruff check src tests scripts`. Full operator detail is in the [reference guide](docs/REFERENCE.md), [deployment guide](docs/DEPLOYMENT.md) and [runbook](docs/RUNBOOK.md).
 
-Completed bundles/reports are retained. For another experiment, copy the config and select unused `dataset_dir`, `bundle_dir`, `report_dir` and routing `--state` paths. Fresh smoke reports live under `artifacts/reports/synthetic-v1/`; tracked `reports/` measurements are historical. Do not delete old evidence to make a repeated command pass.
+## What I learned
 
-For Docker Linux/Compose v2, `docker compose up --build -d` bootstraps the synthetic model in persistent volumes before starting API and lab. Stop with `docker compose down`, preserving volumes. [Deployment guide](docs/DEPLOYMENT.md) · [Local Docker](docs/LOCAL_DOCKER.md). A public browser lab is not a hosted Python API; the earlier Render backend attempt was blocked by a payment-information requirement.
+<!-- Rewrite these in your own words before you point a recruiter here. Short, specific, first person. -->
 
-## Evidence and verification
+- A good validation score is not a shipping decision. Seal the selection, then look at the test set once.
+- Average NDCG hides the cold-start cohort. Report the cohort you built the system for.
+- Fallback with a logged reason is worth more than a slightly better model with no fallback.
 
-| Evidence | Recorded result | Interpretation |
-| --- | --- | --- |
-| [MovieLens case study](docs/MODEL_SELECTION_CASE_STUDY.md) | Validation-selected model lost to popularity on final test | Retained generalization failure; no invented uplift |
-| [Amazon/MovieLens reports](docs/RESULTS.md) | Real-data offline comparisons with explicit cohort sizes and one seed | Ratings are preference proxies; catalog snapshot and cohort assumptions apply |
-| [Windows load diagnostic](docs/FINAL_ENGINEERING_VERIFICATION.md) | Synthetic 5 RPS diagnostic met the target; 50 RPS missed it | Host/workload-specific observations, not a latency SLA |
-| [Stage 4 local review](docs/INTERVIEW.md) | 24 selected tests passed | Synthetic temporary serving, fallback, feedback, rollout and retention fixtures |
+## Limits
 
-From the installed checkout:
+- Single-host state, static catalogue snapshot, one offline seed on real data. No online A/B result.
+- Bundle checksums detect inconsistency, not tampering; load only artifacts you built.
+- The 150 ms budget check runs after retrieval returns; it cannot interrupt a native FAISS call.
+- Production mode requires `ATLAS_ENV=production` and a private API key; the public browser lab is not a hosted API.
 
-```bash
-uv run --no-sync pytest -q
-uv run --no-sync ruff check src tests scripts
-uv run --no-sync ruff format --check src tests scripts
-uv run --no-sync python scripts/model_selection_audit.py --report-dir reports/movielens
-python scripts/check_links.py
-```
+[Data card](docs/DATA_CARD.md) · [Model card](docs/MODEL_CARD.md) · [Full reference](docs/REFERENCE.md)
 
-The audit replays recorded model selection without retraining. New canary/load experiments need fresh output paths and the workload limits in [the runbook](docs/RUNBOOK.md); a synthetic injected-error rollback demonstrates routing mechanics, not measured online recommendation quality. The [image manifest](reports/deployment/image-manifest.json) identifies historical image evidence; a mutable `latest` tag is not a reproducible source identity.
+## How this was built
 
-## Serving contract and limits
+I used AI coding assistants throughout this project. [HOW_THIS_WAS_BUILT.md](docs/HOW_THIS_WAS_BUILT.md) explains what was assisted, what I verified myself, and what I am still working through. The full attribution record is in [OWNERSHIP.md](docs/OWNERSHIP.md).
 
-- Bundle activation checks assets, dimensions, item mappings and feature order before changing routing. Load only trusted operator-built artifacts; checksums detect inconsistency, not authenticity.
-- Seen items are excluded. Retrieval exceptions fall back to popularity with an explicit reason. The 150 ms elapsed check happens after retrieval returns and cannot interrupt a native FAISS call.
-- Histories are bundle snapshots. Feedback validates exposed items and event identity, rejects load-test traffic and exports separately; it does not immediately retrain/personalize the next request.
-- Production mode requires `ATLAS_ENV=production` and a private `ATLAS_API_KEY` of at least 24 characters before startup. Actual request-body bytes are capped at 65,536 before JSON parsing. Local mode/Compose bind to loopback; public deployment needs separate TLS, resource and persistence review.
+## License
 
-Single-host state, static catalog/histories, coarse process-local limits and limited offline cohorts remain explicit. No production scale, business A/B gain or fresh public backend availability is established. [Data card](docs/DATA_CARD.md) · [Model card](docs/MODEL_CARD.md).
-
-## Ownership, next work and license
-
-Implementation, experiments and documentation used AI assistance. [OWNERSHIP.md](docs/OWNERSHIP.md) keeps personal coding/reproduction exercises pending until actual evidence is added. Next: rolling as-of histories, reviewed feedback import and a new untouched temporal evaluation period, before infrastructure expansion without a measured need.
-
-Existing [LICENSE](LICENSE) and [data-rights notice](NOTICE.md) are preserved. Licensing/attribution decisions remain subject to owner review; this presentation update selects no new license and grants no external dataset rights.
+See [LICENSE](LICENSE) and the [data-rights notice](NOTICE.md). Datasets keep their original terms.
