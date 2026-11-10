@@ -2,7 +2,7 @@
 
 ## Permanent public lab
 
-Open https://jill-vekariya.github.io/atlas-recsys/. This is the primary resume/demo link.
+Open https://jill-vekariya.github.io/atlas-recsys/. This is the permanent public demonstration.
 GitHub Pages serves the trained browser model, catalog, ranking engine, and evidence. It keeps
 working independently of the configured PC. No account, card, API key, or proxy is required
 to use it. See [the architecture and reproduction guide](GITHUB_PAGES.md).
@@ -20,7 +20,7 @@ This preserves the actual FastAPI, FAISS, LightGBM, Streamlit, and model-bundle 
 
 The historical public URL is recorded in `reports/public_demo/deployment.json`. It is temporary:
 the PC, Docker Desktop, the application container, and the tunnel must stay running. Restarting
-the tunnel creates a new hostname. Use the permanent GitHub Pages and repository links on a resume. Check a tunnel before sharing it.
+the tunnel creates a new hostname. Use the permanent GitHub Pages and repository links when sharing the project. Check a tunnel before sharing it.
 
 The configured containers are `atlas-recsys-demo` and `atlas-recsys-public-tunnel`. They communicate
 on the dedicated `atlas-recsys-demo-network` Docker network. The tunnel exposes only the Atlas

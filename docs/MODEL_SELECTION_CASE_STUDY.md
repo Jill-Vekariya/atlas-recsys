@@ -1,4 +1,4 @@
-# Model selection: a reproducible interview case study
+# Model selection: validation choice versus held-out performance
 
 ## Question
 
@@ -48,7 +48,7 @@ catalog/head-item distributions. Run sensitivity analyses and repeated seeds
 using **validation or newly reserved evaluation data**. Preserve the original
 held-out test: do not repeatedly tune against this published test result.
 
-## Interview questions
+## Interpreting the result
 
 **Why was tower selected if popularity won the test?** The model-selection
 rule uses validation macro NDCG@10 only. The test result assesses whether

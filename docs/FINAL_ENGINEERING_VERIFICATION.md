@@ -74,7 +74,7 @@ SQLite connection after a transaction and eliminated a previous Windows cleanup
 exception in the local verifier. This was tested but was uncommitted when the
 verification work began. Preserve original model bundles and feedback data.
 
-## Interview / resume claims
+## Verified scope and remaining limits
 
 **Supported:** implemented and tested multi-baseline retriever/ranker, controlled
 temporal evaluation, checksum-validated bundles, synthetic browser lab, FastAPI
@@ -85,6 +85,6 @@ real-data results.
 revenue uplift, superior overall two-tower test performance, or statistically
 established cold-start generalization across multiple seeds.
 
-Before a recruiter interview, explain why validation selected the tower while
-the held-out test favored popularity, why new-user fallback dilutes overall
-comparisons, and why 50 RPS / 150 ms cannot currently be claimed.
+Interpretation must account for validation selecting the tower while the
+held-out test favored popularity, the effect of new-user fallback on overall
+comparisons, and the observed failure to meet 50 RPS / 150 ms.

@@ -22,6 +22,6 @@ authentication internally. Public verification does not transmit an API key thro
 ## Consequence
 
 The public demonstration depends on the PC remaining online, and the hostname changes after
-a tunnel restart. This is a working interview demonstration with a clear operating limitation.
+a tunnel restart. This demonstration requires the host machine to remain online.
 It does not establish managed-cloud availability or production scale. The repository and Docker
 image remain usable even when the temporary demonstration is offline.
