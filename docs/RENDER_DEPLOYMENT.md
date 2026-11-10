@@ -55,7 +55,7 @@ Render service creation, not from an invented hostname.
 Official references: https://render.com/docs/docker,
 https://render.com/docs/blueprint-spec, https://render.com/docs/free.
 
-## Verify before adding the live URL to your résumé
+## Verify the deployed endpoint
 
 Use the actual returned URL:
 
@@ -74,7 +74,7 @@ Check Render's deploy logs and resource metrics. A locally successful benchmark 
 establish cloud latency under the free plan's resource limits. A service may sleep when idle;
 measure cold starts separately. Feedback on the free service resets after restart/redeploy.
 
-## Résumé evidence to retain
+## Deployment evidence to retain
 
 After remote checks actually succeed, retain:
 

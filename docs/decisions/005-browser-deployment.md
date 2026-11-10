@@ -1,6 +1,6 @@
 # Decision 005: independent browser inference demo
 
-A PC-hosted tunnel stops serving when the machine sleeps and is a poor primary resume link.
+A PC-hosted tunnel stops serving when the machine sleeps, making it unsuitable as the permanent public demo.
 The selected managed backend account requested payment information, which violates the no-card constraint.
 
 Export the small synthetic bundle into an exact JavaScript inference engine on GitHub Pages.

@@ -8,9 +8,9 @@
 
 ## The problem
 
-Every catalogue has items nobody has interacted with yet: a new product, a new film, a new course. Collaborative filtering cannot recommend them, and the usual offline evaluation (random train/test split) quietly leaks the future into training. Atlas is my attempt to build a recommender that handles cold items honestly and to serve it the way a real team would: versioned, with a fallback, and with a way to roll back.
+New catalogue items have little or no interaction history, and random train/test splits can overstate recommendation quality by leaking future information. Atlas compares content and collaborative approaches on chronological splits, then serves versioned model bundles with canary routing, fallback and rollback.
 
-## What I built
+## Implementation
 
 - **Four approaches compared on the same chronological split:** popularity, item-based collaborative filtering, a content baseline, and a PyTorch two-tower retriever with FAISS nearest-neighbour search and an optional LightGBM re-ranker.
 - **Time-respecting evaluation:** retrieval trains on window A, ranking targets come from a later window B, and validation and test are separate later windows. Cold items are held out of training but keep their catalogue metadata.
@@ -22,12 +22,12 @@ Every catalogue has items nobody has interacted with yet: a new product, a new f
 
 | Experiment | Result | What it tells you |
 | --- | --- | --- |
-| MovieLens, validation-selected two-tower | **0.2340 test NDCG@10** | The model I would have shipped based on validation |
+| MovieLens, validation-selected two-tower | **0.2340 test NDCG@10** | Model selected by the validation-only rule |
 | MovieLens, popularity baseline | **0.2598 test NDCG@10** | The baseline beat it on the final test |
 | [Multi-seed temporal study](docs/STAGE4_TEMPORAL_STUDY.md) | Selection sealed before test; failed seeds retained | Guards against picking the lucky seed |
 | Load diagnostic (local, synthetic) | 5 RPS met target, 50 RPS missed | Single-host numbers, not an SLA |
 
-The headline is a negative result and I kept it on purpose. The [case study](docs/MODEL_SELECTION_CASE_STUDY.md) walks through why validation-only selection picked a model that lost to popularity, and what the cold-start cohort looked like underneath that average. Single seed, offline, preference ratings as proxies: see [RESULTS.md](docs/RESULTS.md) for every caveat.
+The recorded test result favoured the simpler baseline. The [case study](docs/MODEL_SELECTION_CASE_STUDY.md) walks through why validation-only selection picked a model that lost to popularity, and what the cold-start cohort looked like underneath that average. Single seed, offline, preference ratings as proxies: see [RESULTS.md](docs/RESULTS.md) for every caveat.
 
 ## Where this applies
 
@@ -65,9 +65,7 @@ uv run --no-sync atlas serve                               # http://127.0.0.1:80
 
 Optional Streamlit lab: `uv run --no-sync streamlit run src/atlas/ui.py` (port 8501). Docker: `docker compose up --build -d`. Tests and lint: `uv run --no-sync pytest -q` and `uv run --no-sync ruff check src tests scripts`. Full operator detail is in the [reference guide](docs/REFERENCE.md), [deployment guide](docs/DEPLOYMENT.md) and [runbook](docs/RUNBOOK.md).
 
-## What I learned
-
-<!-- Rewrite these in your own words before you point a recruiter here. Short, specific, first person. -->
+## Engineering takeaways
 
 - A good validation score is not a shipping decision. Seal the selection, then look at the test set once.
 - Average NDCG hides the cold-start cohort. Report the cohort you built the system for.
