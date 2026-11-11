@@ -10,6 +10,10 @@
 
 New catalogue items have little or no interaction history, and random train/test splits can overstate recommendation quality by leaking future information. Atlas compares content and collaborative approaches on chronological splits, then serves versioned model bundles with canary routing, fallback and rollback.
 
+## My involvement
+
+I have invested sustained personal effort in this project and reviewed it repeatedly throughout development. My focus is cold-start recommendations, temporal evaluation, model selection and versioned serving with fallback and rollback. See [project ownership and review](docs/OWNER_REVIEW.md) for my current statement, review scope and technical references.
+
 ## Implementation
 
 - **Four approaches compared on the same chronological split:** popularity, item-based collaborative filtering, a content baseline, and a PyTorch two-tower retriever with FAISS nearest-neighbour search and an optional LightGBM re-ranker.
